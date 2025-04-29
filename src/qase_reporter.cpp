@@ -12,4 +12,8 @@ namespace qase {
 		return collected;
 	}
 
+	void qase_reporter_reset() {
+		collected.clear();
+	}
+
 }
