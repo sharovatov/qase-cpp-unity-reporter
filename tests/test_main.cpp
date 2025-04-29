@@ -12,7 +12,7 @@ int main()
 	// qase reporter should also be able to store the test execution result
 	const auto& results = qase_reporter_get_results();
 	assert(results.size() == 1);
-    assert(results[0].name == "StoreTest");
+    assert(results[0].name == "MyFirstTest");
     assert(results[0].passed == true);
 
 	std::cout << "All TDD checks passed!" << std::endl;
