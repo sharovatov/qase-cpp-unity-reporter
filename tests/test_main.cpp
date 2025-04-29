@@ -4,7 +4,10 @@
 int main()
 {
 
-    std::cout << "All TDD checks passed!" << std::endl;
+	// qase reporter should be able to accept test execution result
+	qase_reporter_add_result("MyFirstTest", true);
 
-    return 0;
+	std::cout << "All TDD checks passed!" << std::endl;
+
+	return 0;
 }
