@@ -7,6 +7,7 @@ using namespace qase;
 // qase reporter should be able to accept test execution result and store it
 void test_results_accepted_stored()
 {
+	qase_reporter_reset();
 	qase_reporter_add_result("MyFirstTest", true);
 
 	const auto& results = qase_reporter_get_results();
@@ -17,9 +18,11 @@ void test_results_accepted_stored()
 }
 
 // if nothing is added to the reporter, it doesn't die but returns empty vector
-void test_results_are_empty_when_none_added() {
-    const auto& results = qase_reporter_get_results();
-    assert(results.empty());
+void test_results_are_empty_when_none_added() 
+{
+	qase_reporter_reset();
+	const auto& results = qase_reporter_get_results();
+	assert(results.empty());
 }
 
 
