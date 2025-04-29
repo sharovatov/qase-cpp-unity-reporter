@@ -4,16 +4,22 @@
 
 using namespace qase;
 
-int main()
+void test_results_accepted_stored()
 {
-	// qase reporter should be able to accept test execution result
+	// qase reporter should be able to accept test execution result and store it
 	qase_reporter_add_result("MyFirstTest", true);
 
-	// qase reporter should also be able to store the test execution result
 	const auto& results = qase_reporter_get_results();
 	assert(results.size() == 1);
-    assert(results[0].name == "MyFirstTest");
-    assert(results[0].passed == true);
+	assert(results[0].name == "MyFirstTest");
+	assert(results[0].passed == true);
+
+}
+
+int main()
+{
+
+	test_results_accepted_stored();
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
