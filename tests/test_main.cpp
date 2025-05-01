@@ -42,6 +42,28 @@ void test_result_with_empty_name_rejected()
 	assert(exception_thrown && "Expected exception for an empty test name");
 }
 
+// qase reporter accumulates multiple test results in insertion order
+void test_multiple_results_are_stored_correctly()
+{
+	qase_reporter_reset();
+
+	qase_reporter_add_result("TestA", true);
+	qase_reporter_add_result("TestB", false);
+	qase_reporter_add_result("TestC", true);
+
+	const auto& results = qase_reporter_get_results();
+	assert(results.size() == 3);
+
+	assert(results[0].name == "TestA");
+	assert(results[0].passed == true);
+
+	assert(results[1].name == "TestB");
+	assert(results[1].passed == false);
+
+	assert(results[2].name == "TestC");
+	assert(results[2].passed == true);
+}
+
 int main()
 {
 	test_results_accepted_stored();
