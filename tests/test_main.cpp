@@ -69,6 +69,7 @@ int main()
 	test_results_accepted_stored();
 	test_results_are_empty_when_none_added();
 	test_result_with_empty_name_rejected();
+	test_multiple_results_are_stored_correctly();
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
