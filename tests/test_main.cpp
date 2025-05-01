@@ -25,12 +25,28 @@ void test_results_are_empty_when_none_added()
 	assert(results.empty());
 }
 
+// test case must have a name — there are no tests without a name
+void test_result_with_empty_name_rejected() 
+{
+	qase_reporter_reset();
+
+	bool exception_thrown = false;
+
+	try {
+		qase_reporter_add_result("", true);
+	} catch (...) 
+	{
+		exception_thrown = true;
+	}
+
+	assert(exception_thrown && "Expected exception for an empty test name");
+}
 
 int main()
 {
 	test_results_accepted_stored();
 	test_results_are_empty_when_none_added();
-
+	test_result_with_empty_name_rejected();
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
