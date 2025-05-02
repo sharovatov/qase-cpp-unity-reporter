@@ -1,4 +1,7 @@
+#include <nlohmann/json.hpp>
 #include "qase_reporter.h"
+
+using json = nlohmann::json;
 
 namespace qase {
 
@@ -20,7 +23,18 @@ namespace qase {
 	}
 
 	std::string qase_reporter_serialize_to_json() {
-		return "";
+		json root;
+		root["results"] = json::array();
+
+		for (const auto& result : collected) {
+			json entry;
+			entry["case"] = { {"title", result.name} };
+			entry["status"] = result.passed ? "passed" : "failed";
+
+			root["results"].push_back(entry);
+		}
+
+		return root.dump();
 	}
 
 }
