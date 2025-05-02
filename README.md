@@ -6,3 +6,24 @@
 4. Serialise results into JSON in the format Qase expects
 5. Submit all results using `POST /result/{projectCode}/{runId}/bulk`
 6. Complete the run by calling `PATCH /run/{projectCode}/{runId}/complete`
+
+## Minimal payload structure
+
+```
+{
+  "results": [
+    {
+      "case": {
+        "title": "MyFirstTest"
+      },
+      "status": "passed"
+    },
+    {
+      "case": {
+        "title": "MySecondTest"
+      },
+      "status": "failed"
+    }
+  ]
+}
+```
