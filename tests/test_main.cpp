@@ -80,6 +80,13 @@ void test_results_are_serialized_to_json()
 	assert(json.find("\"status\":\"failed\"") != std::string::npos);
 }
 
+// we need to receive run_id from qase to register current run results
+void test_start_run_returns_run_id()
+{
+	uint64_t run_id = qase_start_run();
+	assert(run_id == 123456);
+}
+
 int main()
 {
 	test_results_accepted_stored();
@@ -87,6 +94,7 @@ int main()
 	test_result_with_empty_name_rejected();
 	test_multiple_results_are_stored_correctly();
 	test_results_are_serialized_to_json();
+	test_start_run_returns_run_id();
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
