@@ -64,12 +64,29 @@ void test_multiple_results_are_stored_correctly()
 	assert(results[2].passed == true);
 }
 
+// qase reporter serialises accumulated test results to json
+void test_results_are_serialized_to_json()
+{
+	qase_reporter_reset();
+	qase_reporter_add_result("MyFirstTest", true);
+	qase_reporter_add_result("SecondTest", false);
+
+	std::string json = qase_reporter_serialize_to_json();
+
+	assert(json.find("\"results\"") != std::string::npos);
+	assert(json.find("\"title\":\"MyFirstTest\"") != std::string::npos);
+	assert(json.find("\"status\":\"passed\"") != std::string::npos);
+	assert(json.find("\"title\":\"SecondTest\"") != std::string::npos);
+	assert(json.find("\"status\":\"failed\"") != std::string::npos);
+}
+
 int main()
 {
 	test_results_accepted_stored();
 	test_results_are_empty_when_none_added();
 	test_result_with_empty_name_rejected();
 	test_multiple_results_are_stored_correctly();
+	test_results_are_serialized_to_json();
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
