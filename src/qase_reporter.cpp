@@ -19,4 +19,8 @@ namespace qase {
 		collected.clear();
 	}
 
+	std::string qase_reporter_serialize_to_json() {
+		return "";
+	}
+
 }

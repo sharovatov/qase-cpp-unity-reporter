@@ -9,15 +9,26 @@ include_directories(include)
 
 # Main library
 add_library(qase_reporter
-    src/qase_reporter.cpp
+	src/qase_reporter.cpp
 )
+
+include(FetchContent)
+
+FetchContent_Declare(
+	json
+	URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz
+)
+
+FetchContent_MakeAvailable(json)
 
 # Test executable
 add_executable(qase_reporter_tests
-    tests/test_main.cpp
+	tests/test_main.cpp
 )
 
 # Link the library to the tests
 target_link_libraries(qase_reporter_tests
-    qase_reporter
+	PRIVATE
+	qase_reporter
+	nlohmann_json::nlohmann_json
 )

@@ -14,4 +14,6 @@ namespace qase {
 	const std::vector<TestResult>& qase_reporter_get_results();
 
 	void qase_reporter_reset();
+
+	std::string qase_reporter_serialize_to_json();
 }
