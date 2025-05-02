@@ -37,4 +37,9 @@ namespace qase {
 		return root.dump();
 	}
 
+	uint64_t qase_start_run() {
+		return 373458;
+	}
+
+
 }

@@ -16,4 +16,6 @@ namespace qase {
 	void qase_reporter_reset();
 
 	std::string qase_reporter_serialize_to_json();
+
+	uint64_t qase_start_run();
 }
