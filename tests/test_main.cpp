@@ -97,6 +97,28 @@ void test_start_run_returns_run_id()
 	assert(run_id == 123456);
 }
 
+// when wrong project id is passed, Qase API returns errorMessage: "Project is not found."
+// and there's no way for us to gracefully degrade, we must throw
+void test_start_run_handles_wrong_project()
+{
+	struct FakeHttpClient : public qase::HttpClient {
+		std::string post(const std::string&, const std::string&, const std::vector<std::string>&) override {
+			return R"({ "status": false, "errorMessage": "Project is not found." })";
+		}
+	};
+
+	FakeHttpClient fake;
+
+	bool exception_thrown = false;
+	try {
+		uint64_t run_id = qase_start_run(fake);
+	} catch (const std::runtime_error& e) {
+		exception_thrown = std::string(e.what()).find("Project is not found.") != std::string::npos;
+	}
+
+	assert(exception_thrown && "Expected std::runtime_error with project not found message");
+}
+
 int main()
 {
 	test_results_accepted_stored();
@@ -105,6 +127,7 @@ int main()
 	test_multiple_results_are_stored_correctly();
 	test_results_are_serialized_to_json();
 	test_start_run_returns_run_id();
+	test_start_run_handles_wrong_project();
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
