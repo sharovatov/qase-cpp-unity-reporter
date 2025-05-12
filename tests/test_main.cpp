@@ -83,8 +83,18 @@ void test_results_are_serialized_to_json()
 // we need to receive run_id from qase to register current run results
 void test_start_run_returns_run_id()
 {
-	HttpClient http;
-	uint64_t run_id = qase_start_run(http);
+
+	// extremely basic fake http client
+	struct FakeHttpClient : public qase::HttpClient {
+		std::string post(const std::string& url, const std::string& body, const std::vector<std::string>& headers) override {
+			return R"({ "status": true, "result": { "id": 123456 } })";
+		}
+	};
+
+	FakeHttpClient fake;
+
+	// qase_start_run must call HttpClient.post to retrieve the run_id from Qase API
+	uint64_t run_id = qase_start_run(fake);
 	assert(run_id == 123456);
 }
 
