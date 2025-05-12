@@ -10,6 +10,10 @@ namespace qase {
 		bool passed;
 	};
 
+	struct HttpClient {
+		virtual ~HttpClient() = default;
+	};
+
 	void qase_reporter_add_result(const std::string& name, bool passed);
 	const std::vector<TestResult>& qase_reporter_get_results();
 
@@ -17,5 +21,5 @@ namespace qase {
 
 	std::string qase_reporter_serialize_to_json();
 
-	uint64_t qase_start_run();
+	uint64_t qase_start_run(HttpClient& http);
 }
