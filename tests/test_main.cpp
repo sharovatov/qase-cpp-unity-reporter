@@ -25,6 +25,12 @@ void expect_qase_api_error(FakeHttpClient& fake, Func api_call, const std::strin
 	assert(exception_thrown && ("Expected std::runtime_error with message: " + expected_message).c_str());
 }
 
+FakeHttpClient make_fake_with_error(const std::string& error_message) {
+	FakeHttpClient fake;
+	fake.canned_response = R"({ "status": false, "errorMessage": ")" + error_message + R"(" })";
+	return fake;
+}
+
 // qase reporter should be able to accept test execution result and store it
 void test_results_accepted_stored()
 {
@@ -116,24 +122,15 @@ void test_start_run_returns_run_id()
 // and there's no way for us to gracefully degrade, we must throw
 void test_start_run_handles_wrong_project()
 {
-	FakeHttpClient fake;
-	fake.canned_response = R"({ "status": false, "errorMessage": "Project is not found." })";
-
-	expect_qase_api_error(fake, [&]() {
-			qase_start_run(fake, "ET1");
-	}, "Project is not found.");
-
+	auto fake = make_fake_with_error("Project is not found.");
+	expect_qase_api_error(fake, [&]() { qase_start_run(fake, "ET1"); }, "Project is not found.");
 }
 
 // when we're trying to call Qase API's bulk result method with the wrong project, there's no way to gracefully degrade, it should just throw
 void test_submit_results_handles_wrong_project()
 {
-	FakeHttpClient fake;
-	fake.canned_response = R"({ "status": false, "errorMessage": "Project is not found." })";
-
-	expect_qase_api_error(fake, [&]() {
-			qase_submit_results(fake, "ET1", 123456);
-	}, "Project is not found.");
+	auto fake = make_fake_with_error("Project is not found.");
+	expect_qase_api_error(fake, [&]() { qase_submit_results(fake, "ET1", 123456); }, "Project is not found.");
 }
 
 int main()
