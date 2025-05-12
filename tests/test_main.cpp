@@ -83,7 +83,8 @@ void test_results_are_serialized_to_json()
 // we need to receive run_id from qase to register current run results
 void test_start_run_returns_run_id()
 {
-	uint64_t run_id = qase_start_run();
+	HttpClient http;
+	uint64_t run_id = qase_start_run(http);
 	assert(run_id == 123456);
 }
 
