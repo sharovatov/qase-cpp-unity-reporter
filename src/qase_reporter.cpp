@@ -7,6 +7,19 @@ namespace qase {
 
 	static std::vector<TestResult> collected;
 
+	void check_qase_api_error(const nlohmann::json& json)
+	{
+		if (json.contains("status") && json["status"].is_boolean() && json["status"] == false) {
+			std::string error_message = "Unknown API error";
+
+			if (json.contains("errorMessage") && json["errorMessage"].is_string()) {
+				error_message = json["errorMessage"].get<std::string>();
+			}
+
+			throw std::runtime_error("Qase API error: " + error_message);
+		}
+	}
+
 	void qase_reporter_add_result(const std::string& name, bool passed) {
 		if (name.empty()) {
 			throw std::invalid_argument("Test name must not be empty");
@@ -50,16 +63,7 @@ namespace qase {
 		std::string response = http.post(url, payload, headers);
 		auto json = nlohmann::json::parse(response);
 
-		// if status is explicitly false, we need to figure out why and throw what we can
-		if (json.contains("status") && json["status"].is_boolean() && json["status"] == false) {
-			std::string error_message = "Unknown API error";
-
-			if (json.contains("errorMessage") && json["errorMessage"].is_string()) {
-				error_message = json["errorMessage"].get<std::string>();
-			}
-
-			throw std::runtime_error("Qase API error: " + error_message);
-		}
+		check_qase_api_error(json);
 
 		// extract result.id if present
 		if (json.contains("result") && json["result"].contains("id")) {
@@ -83,13 +87,7 @@ namespace qase {
 		std::string response = http.post(url, payload, headers);
 		auto json = nlohmann::json::parse(response);
 
-		if (json.contains("status") && json["status"].is_boolean() && json["status"] == false) {
-			std::string error_message = "Unknown API error";
-			if (json.contains("errorMessage") && json["errorMessage"].is_string()) {
-				error_message = json["errorMessage"].get<std::string>();
-			}
-			throw std::runtime_error("Qase API error: " + error_message);
-		}
+		check_qase_api_error(json);
 
 		return true; // success if status is true
 
