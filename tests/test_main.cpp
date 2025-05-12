@@ -4,6 +4,14 @@
 
 using namespace qase;
 
+struct FakeHttpClient : public qase::HttpClient {
+	std::string canned_response;
+
+	std::string post(const std::string&, const std::string&, const std::vector<std::string>&) override {
+		return canned_response;
+	}
+};
+
 // qase reporter should be able to accept test execution result and store it
 void test_results_accepted_stored()
 {
@@ -83,14 +91,8 @@ void test_results_are_serialized_to_json()
 // we need to receive run_id from qase to register current run results
 void test_start_run_returns_run_id()
 {
-	// extremely basic fake http client
-	struct FakeHttpClient : public qase::HttpClient {
-		std::string post(const std::string& url, const std::string& body, const std::vector<std::string>& headers) override {
-			return R"({ "status": true, "result": { "id": 123456 } })";
-		}
-	};
-
 	FakeHttpClient fake;
+	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
 
 	// qase_start_run must call HttpClient.post to retrieve the run_id from Qase API
 	uint64_t run_id = qase_start_run(fake);
@@ -101,13 +103,8 @@ void test_start_run_returns_run_id()
 // and there's no way for us to gracefully degrade, we must throw
 void test_start_run_handles_wrong_project()
 {
-	struct FakeHttpClient : public qase::HttpClient {
-		std::string post(const std::string&, const std::string&, const std::vector<std::string>&) override {
-			return R"({ "status": false, "errorMessage": "Project is not found." })";
-		}
-	};
-
 	FakeHttpClient fake;
+	fake.canned_response = R"({ "status": false, "errorMessage": "Project is not found." })";
 
 	bool exception_thrown = false;
 	try {
