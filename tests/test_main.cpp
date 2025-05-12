@@ -12,6 +12,19 @@ struct FakeHttpClient : public qase::HttpClient {
 	}
 };
 
+template<typename Func>
+void expect_qase_api_error(FakeHttpClient& fake, Func api_call, const std::string& expected_message)
+{
+	bool exception_thrown = false;
+	try {
+		api_call();
+	} catch (const std::runtime_error& e) {
+		exception_thrown = std::string(e.what()).find(expected_message) != std::string::npos;
+	}
+
+	assert(exception_thrown && ("Expected std::runtime_error with message: " + expected_message).c_str());
+}
+
 // qase reporter should be able to accept test execution result and store it
 void test_results_accepted_stored()
 {
@@ -106,14 +119,10 @@ void test_start_run_handles_wrong_project()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": false, "errorMessage": "Project is not found." })";
 
-	bool exception_thrown = false;
-	try {
-		uint64_t run_id = qase_start_run(fake, "ET1");
-	} catch (const std::runtime_error& e) {
-		exception_thrown = std::string(e.what()).find("Project is not found.") != std::string::npos;
-	}
+	expect_qase_api_error(fake, [&]() {
+			qase_start_run(fake, "ET1");
+	}, "Project is not found.");
 
-	assert(exception_thrown && "Expected std::runtime_error with project not found message");
 }
 
 // when we're trying to call Qase API's bulk result method with the wrong project, there's no way to gracefully degrade, it should just throw
@@ -122,14 +131,9 @@ void test_submit_results_handles_wrong_project()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": false, "errorMessage": "Project is not found." })";
 
-	bool exception_thrown = false;
-	try {
-		qase_submit_results(fake, "ET1", 123456);
-	} catch (const std::runtime_error& e) {
-		exception_thrown = std::string(e.what()).find("Project is not found.") != std::string::npos;
-	}
-
-	assert(exception_thrown && "Expected std::runtime_error with project not found message");
+	expect_qase_api_error(fake, [&]() {
+			qase_submit_results(fake, "ET1", 123456);
+	}, "Project is not found.");
 }
 
 int main()
