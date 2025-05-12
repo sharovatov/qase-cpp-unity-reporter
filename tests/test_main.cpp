@@ -95,7 +95,7 @@ void test_start_run_returns_run_id()
 	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
 
 	// qase_start_run must call HttpClient.post to retrieve the run_id from Qase API
-	uint64_t run_id = qase_start_run(fake);
+	uint64_t run_id = qase_start_run(fake, "ET1");
 	assert(run_id == 123456);
 }
 
@@ -108,7 +108,7 @@ void test_start_run_handles_wrong_project()
 
 	bool exception_thrown = false;
 	try {
-		uint64_t run_id = qase_start_run(fake);
+		uint64_t run_id = qase_start_run(fake, "ET1");
 	} catch (const std::runtime_error& e) {
 		exception_thrown = std::string(e.what()).find("Project is not found.") != std::string::npos;
 	}
