@@ -24,4 +24,6 @@ namespace qase {
 	std::string qase_reporter_serialize_to_json();
 
 	uint64_t qase_start_run(HttpClient& http, const std::string& project_code);
+	bool qase_submit_results(HttpClient& http, const std::string& project_code, uint64_t run_id);
+
 }

@@ -69,5 +69,31 @@ namespace qase {
 		throw std::runtime_error("qase_start_run unknown error");
 	}
 
+	bool qase_submit_results(HttpClient& http, const std::string& project_code, uint64_t run_id) {
+		const std::string url = "https://api.qase.io/v1/result/" + project_code + "/" + std::to_string(run_id) + "/bulk";
+
+		const std::string payload = R"({ "results": [] })"; // no need for payload for now
+
+		const std::vector<std::string> headers = {
+			"accept: application/json",
+			"content-type: application/json",
+			"Token: 4a02e17acfa32e7b71067e3beb597490f8a9bda427697c2a3bf49044582ee668"
+		};
+
+		std::string response = http.post(url, payload, headers);
+		auto json = nlohmann::json::parse(response);
+
+		if (json.contains("status") && json["status"].is_boolean() && json["status"] == false) {
+			std::string error_message = "Unknown API error";
+			if (json.contains("errorMessage") && json["errorMessage"].is_string()) {
+				error_message = json["errorMessage"].get<std::string>();
+			}
+			throw std::runtime_error("Qase API error: " + error_message);
+		}
+
+		return true; // success if status is true
+
+	}
+
 
 }
