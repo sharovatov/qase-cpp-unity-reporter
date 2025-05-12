@@ -116,6 +116,22 @@ void test_start_run_handles_wrong_project()
 	assert(exception_thrown && "Expected std::runtime_error with project not found message");
 }
 
+// when we're trying to call Qase API's bulk result method with the wrong project, there's no way to gracefully degrade, it should just throw
+void test_submit_results_handles_wrong_project()
+{
+	FakeHttpClient fake;
+	fake.canned_response = R"({ "status": false, "errorMessage": "Project is not found." })";
+
+	bool exception_thrown = false;
+	try {
+		qase_submit_results(fake, "ET1", 123456);
+	} catch (const std::runtime_error& e) {
+		exception_thrown = std::string(e.what()).find("Project is not found.") != std::string::npos;
+	}
+
+	assert(exception_thrown && "Expected std::runtime_error with project not found message");
+}
+
 int main()
 {
 	test_results_accepted_stored();
@@ -125,6 +141,7 @@ int main()
 	test_results_are_serialized_to_json();
 	test_start_run_returns_run_id();
 	test_start_run_handles_wrong_project();
+	test_submit_results_handles_wrong_project();
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
