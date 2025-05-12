@@ -83,7 +83,6 @@ void test_results_are_serialized_to_json()
 // we need to receive run_id from qase to register current run results
 void test_start_run_returns_run_id()
 {
-
 	// extremely basic fake http client
 	struct FakeHttpClient : public qase::HttpClient {
 		std::string post(const std::string& url, const std::string& body, const std::vector<std::string>& headers) override {

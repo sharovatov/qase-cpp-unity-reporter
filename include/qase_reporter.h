@@ -11,6 +11,8 @@ namespace qase {
 	};
 
 	struct HttpClient {
+		virtual std::string post(const std::string& url, const std::string& body, const std::vector<std::string>& headers) = 0;
+
 		virtual ~HttpClient() = default;
 	};
 

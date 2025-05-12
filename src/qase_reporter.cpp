@@ -37,8 +37,26 @@ namespace qase {
 		return root.dump();
 	}
 
+	// qase_start_run should call Qase API and return new test run
 	uint64_t qase_start_run(HttpClient& http) {
-		return 373458;
+		const std::string url = "https://api.qase.io/v1/run/ET1";
+		const std::string payload = R"({ "title": "Unity Test Run", "include_all_cases": true })";
+		const std::vector<std::string> headers = {
+			"accept: application/json",
+			"content-type: application/json",
+			"Token: 4a02e17acfa32e7b71067e3beb597490f8a9bda427697c2a3bf49044582ee668"
+		};
+
+		std::string response = http.post(url, payload, headers);
+		auto json = nlohmann::json::parse(response);
+
+		// extract result.id if present
+		if (json.contains("result") && json["result"].contains("id")) {
+			return json["result"]["id"].get<uint64_t>();
+		}
+
+		// If no id found, return 0 (failure case)
+		return 0;
 	}
 
 
