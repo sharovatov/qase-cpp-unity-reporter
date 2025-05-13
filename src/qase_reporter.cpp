@@ -89,7 +89,7 @@ namespace qase {
 
 		check_qase_api_error(json);
 
-		return true; // success if status is true
+		return json.contains("status") && json["status"] == true;
 
 	}
 
