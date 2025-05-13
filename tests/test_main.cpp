@@ -177,6 +177,25 @@ void test_start_run_calls_correct_url()
 	assert(fake.called_url == "https://api.qase.io/v1/run/ET1");
 }
 
+// qase_start_run must also pass the correct token in the header
+void test_start_run_sets_token_header()
+{
+	FakeHttpClient fake;
+	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
+
+	qase_start_run(fake, "ET1");
+
+	bool token_found = false;
+	for (const auto& header : fake.called_headers) {
+		if (header.find("Token: ") == 0) {
+			token_found = (header == "Token: 4a02e17acfa32e7b71067e3beb597490f8a9bda427697c2a3bf49044582ee668");
+			break;
+		}
+	}
+
+	assert(token_found && "Expected Token header to be set correctly in start_run request");
+}
+
 int main()
 {
 	test_results_accepted_stored();
