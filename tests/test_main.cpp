@@ -144,6 +144,15 @@ void test_submit_results_happy_path()
 	assert(result == true && "Expected qase_submit_results to return true on success");
 }
 
+// when trying to complete a run with an invalid run id or invalid project code, 
+// Qase API returns an error, and we should throw
+void test_complete_run_handles_wrong_project()
+{
+	auto fake = make_fake_with_error("Project is not found.");
+
+	expect_qase_api_error(fake, [&]() { qase_complete_run(fake, "ET1", 123456); }, "Project is not found.");
+}
+
 int main()
 {
 	test_results_accepted_stored();
@@ -155,6 +164,7 @@ int main()
 	test_start_run_handles_wrong_project();
 	test_submit_results_handles_wrong_project();
 	test_submit_results_happy_path();
+	test_complete_run_handles_wrong_project();
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
