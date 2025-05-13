@@ -134,7 +134,9 @@ void test_start_run_handles_wrong_project()
 void test_submit_results_handles_wrong_project()
 {
 	auto fake = make_fake_with_error("Project is not found.");
-	expect_qase_api_error(fake, [&]() { qase_submit_results(fake, "ET1", 123456); }, "Project is not found.");
+	expect_qase_api_error(fake, [&]() {
+			qase_submit_results(fake, "ET1", 123456, "fake token");
+	}, "Project is not found.");
 }
 
 // when Qase API responds with { "status": true }, it means that the submit_resuts worked fine!
@@ -143,7 +145,7 @@ void test_submit_results_happy_path()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	bool result = qase_submit_results(fake, "ET1", 123456);
+	bool result = qase_submit_results(fake, "ET1", 123456, "fake token");
 
 	assert(result == true && "Expected qase_submit_results to return true on success");
 }
