@@ -93,5 +93,10 @@ namespace qase {
 
 	}
 
-
+	bool qase_complete_run(HttpClient& http, const std::string& project_code, uint64_t run_id) {
+		(void)http;
+		(void)project_code;
+		(void)run_id;
+		return true;
+	}
 }
