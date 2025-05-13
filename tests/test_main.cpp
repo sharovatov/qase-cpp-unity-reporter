@@ -183,7 +183,7 @@ void test_start_run_calls_correct_url()
 void test_start_run_sets_token_header()
 {
 	FakeHttpClient fake;
-	fake.canned_response = R"({ "status": true })";
+	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
 
 	const std::string expected_token = "FAKE_TOKEN_456";
 
@@ -213,6 +213,7 @@ int main()
 	test_complete_run_handles_wrong_project();
 	test_complete_run_happy_path();
 	test_start_run_calls_correct_url();
+	test_start_run_sets_token_header();
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
