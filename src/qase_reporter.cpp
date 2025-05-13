@@ -51,13 +51,13 @@ namespace qase {
 	}
 
 	// qase_start_run should call Qase API and return new test run
-	uint64_t qase_start_run(HttpClient& http, const std::string& project_code) {
+	uint64_t qase_start_run(HttpClient& http, const std::string& project_code, const std::string& token) {
 		const std::string url = "https://api.qase.io/v1/run/" + project_code;
 		const std::string payload = R"({ "title": "Unity Test Run", "include_all_cases": true })";
 		const std::vector<std::string> headers = {
 			"accept: application/json",
 			"content-type: application/json",
-			"Token: 4a02e17acfa32e7b71067e3beb597490f8a9bda427697c2a3bf49044582ee668"
+			"Token: " + token
 		};
 
 		std::string response = http.post(url, payload, headers);
