@@ -93,13 +93,13 @@ namespace qase {
 
 	}
 
-	bool qase_complete_run(HttpClient& http, const std::string& project_code, uint64_t run_id) {
+	bool qase_complete_run(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token) {
 
 		const std::string url = "https://api.qase.io/v1/run/" + project_code + "/" + std::to_string(run_id) + "/complete";
 
 		const std::vector<std::string> headers = {
 			"accept: application/json",
-			"Token: 4a02e17acfa32e7b71067e3beb597490f8a9bda427697c2a3bf49044582ee668"
+			"Token: " + token
 		};
 
 		std::string response = http.post(url, "", headers);

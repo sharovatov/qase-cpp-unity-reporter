@@ -156,7 +156,9 @@ void test_complete_run_handles_wrong_project()
 {
 	auto fake = make_fake_with_error("Project is not found."); //when the error is Test run not found, the same logics would apply
 
-	expect_qase_api_error(fake, [&]() { qase_complete_run(fake, "ET1", 123456); }, "Project is not found.");
+	expect_qase_api_error(fake, [&]() {
+			qase_complete_run(fake, "ET1", 123456, "fake token");
+		}, "Project is not found.");
 }
 
 // when Qase API responds with { "status": true }, qase_complete_run should return true
@@ -165,7 +167,7 @@ void test_complete_run_happy_path()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	bool result = qase_complete_run(fake, "ET1", 123456);
+	bool result = qase_complete_run(fake, "ET1", 123456, "fake token");
 
 	assert(result == true && "Expected qase_complete_run to return true on success");
 }
