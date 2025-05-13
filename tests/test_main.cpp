@@ -181,6 +181,19 @@ void test_start_run_calls_correct_url()
 	assert(fake.called_url == "https://api.qase.io/v1/run/ET1");
 }
 
+// helper: searches for token in the fake http client
+void expect_token_header_set(FakeHttpClient& fake, const std::string& expected_token)
+{
+	bool token_found = false;
+	for (const auto& header : fake.called_headers) {
+		if (header == "Token: " + expected_token) {
+			token_found = true;
+			break;
+		}
+	}
+	assert(token_found && "Expected Token header to be set correctly");
+}
+
 // qase_start_run must receive the token and pass it in the HTTP header correctly
 void test_start_run_sets_token_header()
 {
@@ -191,20 +204,12 @@ void test_start_run_sets_token_header()
 
 	qase_start_run(fake, "ET1", expected_token);
 
-	bool token_found = false;
-	for (const auto& header : fake.called_headers) {
-		if (header == "Token: " + expected_token) {
-			token_found = true;
-			break;
-		}
-	}
-	assert(token_found && "Expected Token header to be set correctly");
+	expect_token_header_set(fake, expected_token);
 }
 
 // qase_submit_results must receive the token and pass it in the HTTP header correctly
 void test_submit_results_sets_token_header()
 {
-	
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
@@ -212,16 +217,8 @@ void test_submit_results_sets_token_header()
 
 	qase_submit_results(fake, "ET1", 123456, expected_token);
 
-	bool token_found = false;
-	for (const auto& header : fake.called_headers) {
-		if (header == "Token: " + expected_token) {
-			token_found = true;
-			break;
-		}
-	}
-	assert(token_found && "Expected Token header to be set correctly");
+	expect_token_header_set(fake, expected_token);
 }
-
 
 
 int main()
