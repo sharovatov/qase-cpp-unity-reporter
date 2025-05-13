@@ -118,7 +118,7 @@ void test_start_run_returns_run_id()
 	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
 
 	// qase_start_run must call HttpClient.post to retrieve the run_id from Qase API
-	uint64_t run_id = qase_start_run(fake, "ET1");
+	uint64_t run_id = qase_start_run(fake, "ET1", "fake token");
 	assert(run_id == 123456);
 }
 
@@ -127,7 +127,7 @@ void test_start_run_returns_run_id()
 void test_start_run_handles_wrong_project()
 {
 	auto fake = make_fake_with_error("Project is not found.");
-	expect_qase_api_error(fake, [&]() { qase_start_run(fake, "ET1"); }, "Project is not found.");
+	expect_qase_api_error(fake, [&]() { qase_start_run(fake, "ET1", "fake token"); }, "Project is not found.");
 }
 
 // when we're trying to call Qase API's bulk result method with the wrong project, there's no way to gracefully degrade, it should just throw
@@ -174,7 +174,7 @@ void test_start_run_calls_correct_url()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
 
-	qase_start_run(fake, "ET1");
+	qase_start_run(fake, "ET1", "fake token");
 
 	assert(fake.called_url == "https://api.qase.io/v1/run/ET1");
 }
