@@ -220,6 +220,18 @@ void test_submit_results_sets_token_header()
 	expect_token_header_set(fake, expected_token);
 }
 
+// qase_complete_run must receive the token and pass it in the HTTP header correctly
+void test_complete_run_sets_token_header()
+{
+	FakeHttpClient fake;
+	fake.canned_response = R"({ "status": true })";
+
+	const std::string expected_token = "FAKE_TOKEN_456";
+
+	qase_complete_run(fake, "ET1", 123456, expected_token);
+
+	expect_token_header_set(fake, expected_token);
+}
 
 int main()
 {
@@ -237,6 +249,7 @@ int main()
 	test_start_run_calls_correct_url();
 	test_start_run_sets_token_header();
 	test_submit_results_sets_token_header();
+	test_complete_run_sets_token_header();
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
