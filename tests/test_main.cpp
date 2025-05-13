@@ -148,9 +148,20 @@ void test_submit_results_happy_path()
 // Qase API returns an error, and we should throw
 void test_complete_run_handles_wrong_project()
 {
-	auto fake = make_fake_with_error("Project is not found.");
+	auto fake = make_fake_with_error("Project is not found."); //when the error is Test run not found, the same logics would apply
 
 	expect_qase_api_error(fake, [&]() { qase_complete_run(fake, "ET1", 123456); }, "Project is not found.");
+}
+
+// when Qase API responds with { "status": true }, qase_complete_run should return true
+void test_complete_run_happy_path()
+{
+	FakeHttpClient fake;
+	fake.canned_response = R"({ "status": true })";
+
+	bool result = qase_complete_run(fake, "ET1", 123456);
+
+	assert(result == true && "Expected qase_complete_run to return true on success");
 }
 
 int main()
@@ -165,6 +176,7 @@ int main()
 	test_submit_results_handles_wrong_project();
 	test_submit_results_happy_path();
 	test_complete_run_handles_wrong_project();
+	test_complete_run_happy_path();
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
