@@ -59,9 +59,12 @@ namespace qase {
 		};
 	}
 
+	// Qase API url
+	const std::string api_url = "https://api.qase.io/v1/";
+
 	// qase_start_run should call Qase API and return new test run
 	uint64_t qase_start_run(HttpClient& http, const std::string& project_code, const std::string& token) {
-		const std::string url = "https://api.qase.io/v1/run/" + project_code;
+		const std::string url = api_url + "run/" + project_code;
 		const std::string payload = R"({ "title": "Unity Test Run", "include_all_cases": true })";
 		const auto headers = make_headers(token);
 
@@ -79,7 +82,7 @@ namespace qase {
 	}
 
 	bool qase_submit_results(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token) {
-		const std::string url = "https://api.qase.io/v1/result/" + project_code + "/" + std::to_string(run_id) + "/bulk";
+		const std::string url = api_url + "result/" + project_code + "/" + std::to_string(run_id) + "/bulk";
 
 		const std::string payload = R"({ "results": [] })"; // no need for payload for now
 		const auto headers = make_headers(token);
@@ -95,7 +98,7 @@ namespace qase {
 
 	bool qase_complete_run(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token) {
 
-		const std::string url = "https://api.qase.io/v1/run/" + project_code + "/" + std::to_string(run_id) + "/complete";
+		const std::string url = api_url + "run/" + project_code + "/" + std::to_string(run_id) + "/complete";
 
 		const auto headers = make_headers(token);
 
