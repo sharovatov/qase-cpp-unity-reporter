@@ -164,6 +164,17 @@ void test_complete_run_happy_path()
 	assert(result == true && "Expected qase_complete_run to return true on success");
 }
 
+// now we need to make sure that qase_start_run correctly creates the URL
+void test_start_run_calls_correct_url()
+{
+	FakeHttpClient fake;
+	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
+
+	qase_start_run(fake, "ET1");
+
+	assert(fake.called_url == "https://api.qase.io/v1/run/ET1");
+}
+
 int main()
 {
 	test_results_accepted_stored();
@@ -177,6 +188,7 @@ int main()
 	test_submit_results_happy_path();
 	test_complete_run_handles_wrong_project();
 	test_complete_run_happy_path();
+	test_start_run_calls_correct_url();
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
