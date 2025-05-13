@@ -133,6 +133,17 @@ void test_submit_results_handles_wrong_project()
 	expect_qase_api_error(fake, [&]() { qase_submit_results(fake, "ET1", 123456); }, "Project is not found.");
 }
 
+// when Qase API responds with { "status": true }, it means that the submit_resuts worked fine!
+void test_submit_results_happy_path()
+{
+	FakeHttpClient fake;
+	fake.canned_response = R"({ "status": true })";
+
+	bool result = qase_submit_results(fake, "ET1", 123456);
+
+	assert(result == true && "Expected qase_submit_results to return true on success");
+}
+
 int main()
 {
 	test_results_accepted_stored();
@@ -143,6 +154,7 @@ int main()
 	test_start_run_returns_run_id();
 	test_start_run_handles_wrong_project();
 	test_submit_results_handles_wrong_project();
+	test_submit_results_happy_path();
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
