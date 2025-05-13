@@ -6,8 +6,10 @@ using namespace qase;
 
 struct FakeHttpClient : public qase::HttpClient {
 	std::string canned_response;
+	std::string called_url;
 
-	std::string post(const std::string&, const std::string&, const std::vector<std::string>&) override {
+	std::string post(const std::string& url, const std::string&, const std::vector<std::string>&) override {
+		called_url = url;
 		return canned_response;
 	}
 };
