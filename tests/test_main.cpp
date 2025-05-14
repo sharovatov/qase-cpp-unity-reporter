@@ -2,6 +2,11 @@
 #include <iostream>
 #include "qase_reporter.h"
 
+#define RUN_TEST(test_func) \
+    std::cout << "Running " #test_func "... "; \
+    test_func(); \
+    std::cout << "OK\n";
+
 using namespace qase;
 
 struct FakeHttpClient : public qase::HttpClient {
@@ -237,21 +242,21 @@ void test_complete_run_sets_token_header()
 
 int main()
 {
-	test_results_accepted_stored();
-	test_results_are_empty_when_none_added();
-	test_result_with_empty_name_rejected();
-	test_multiple_results_are_stored_correctly();
-	test_results_are_serialized_to_json();
-	test_start_run_returns_run_id();
-	test_start_run_handles_wrong_project();
-	test_submit_results_handles_wrong_project();
-	test_submit_results_happy_path();
-	test_complete_run_handles_wrong_project();
-	test_complete_run_happy_path();
-	test_start_run_calls_correct_url();
-	test_start_run_sets_token_header();
-	test_submit_results_sets_token_header();
-	test_complete_run_sets_token_header();
+	RUN_TEST(test_results_accepted_stored);
+	RUN_TEST(test_results_are_empty_when_none_added);
+	RUN_TEST(test_result_with_empty_name_rejected);
+	RUN_TEST(test_multiple_results_are_stored_correctly);
+	RUN_TEST(test_results_are_serialized_to_json);
+	RUN_TEST(test_start_run_returns_run_id);
+	RUN_TEST(test_start_run_handles_wrong_project);
+	RUN_TEST(test_submit_results_handles_wrong_project);
+	RUN_TEST(test_submit_results_happy_path);
+	RUN_TEST(test_complete_run_handles_wrong_project);
+	RUN_TEST(test_complete_run_happy_path);
+	RUN_TEST(test_start_run_calls_correct_url);
+	RUN_TEST(test_start_run_sets_token_header);
+	RUN_TEST(test_submit_results_sets_token_header);
+	RUN_TEST(test_complete_run_sets_token_header);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
