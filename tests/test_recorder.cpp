@@ -1,5 +1,8 @@
 #include <iostream>
+#include <nlohmann/json.hpp>
+
 #include "qase_reporter.h"
+
 using namespace qase;
 
 // qase reporter should be able to accept test execution result and store it

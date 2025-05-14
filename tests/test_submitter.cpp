@@ -6,16 +6,19 @@ using namespace qase;
 struct FakeHttpClient : public qase::HttpClient {
 	std::string canned_response;
 	std::string called_url;
+	std::string called_payload;
 	std::vector<std::string> called_headers;
 
-	std::string post(const std::string& url, const std::string&, const std::vector<std::string>& headers) override {
+	std::string post(const std::string& url, const std::string& body, const std::vector<std::string>& headers) override {
 		called_url = url;
 		called_headers = headers;
+		called_payload = body;
 		return canned_response;
 	}
 };
 
 const std::string test_token = "FAKE_TOKEN_456";
+const std::string empty_payload = "{ \"results\":[] }";
 
 template<typename Func>
 void expect_qase_api_error(FakeHttpClient& fake, Func api_call, const std::string& expected_message)
@@ -60,7 +63,7 @@ void test_submit_results_handles_wrong_project()
 {
 	auto fake = make_fake_with_error("Project is not found.");
 	expect_qase_api_error(fake, [&]() {
-			qase_submit_results(fake, "ET1", 123456, test_token);
+			qase_submit_results(fake, "ET1", 123456, test_token, empty_payload);
 	}, "Project is not found.");
 }
 
@@ -70,7 +73,7 @@ void test_submit_results_happy_path()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	bool result = qase_submit_results(fake, "ET1", 123456, test_token);
+	bool result = qase_submit_results(fake, "ET1", 123456, test_token, empty_payload);
 
 	assert(result == true && "Expected qase_submit_results to return true on success");
 }
@@ -138,7 +141,7 @@ void test_submit_results_sets_token_header()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	qase_submit_results(fake, "ET1", 123456, test_token);
+	qase_submit_results(fake, "ET1", 123456, test_token, empty_payload);
 
 	expect_token_header_set(fake, test_token);
 }
@@ -154,7 +157,7 @@ void test_complete_run_sets_token_header()
 	expect_token_header_set(fake, test_token);
 }
 
-// qase_submit_results must pass 
+// qase_submit_results must pass the payload to HTTP
 void test_submit_results_passes_payload_correctly()
 {
 	FakeHttpClient fake;
@@ -167,7 +170,7 @@ void test_submit_results_passes_payload_correctly()
         ]
     })";
 
-	qase_submit_results(fake, "ET1", 123456, expected_token, expected_payload);
+	qase_submit_results(fake, "ET1", 123456, test_token, expected_payload);
 
 	// parse both payloads as JSON and compare them structurally
     auto expected_json = nlohmann::json::parse(expected_payload);

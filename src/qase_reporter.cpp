@@ -81,10 +81,8 @@ namespace qase {
 		throw std::runtime_error("qase_start_run unknown error");
 	}
 
-	bool qase_submit_results(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token) {
+	bool qase_submit_results(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token, const std::string& payload) {
 		const std::string url = api_url + "result/" + project_code + "/" + std::to_string(run_id) + "/bulk";
-
-		const std::string payload = R"({ "results": [] })"; // no need for payload for now
 		const auto headers = make_headers(token);
 
 		std::string response = http.post(url, payload, headers);
