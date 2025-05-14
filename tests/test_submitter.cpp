@@ -15,6 +15,8 @@ struct FakeHttpClient : public qase::HttpClient {
 	}
 };
 
+const std::string test_token = "FAKE_TOKEN_456";
+
 template<typename Func>
 void expect_qase_api_error(FakeHttpClient& fake, Func api_call, const std::string& expected_message)
 {
@@ -41,7 +43,7 @@ void test_start_run_returns_run_id()
 	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
 
 	// qase_start_run must call HttpClient.post to retrieve the run_id from Qase API
-	uint64_t run_id = qase_start_run(fake, "ET1", "fake token");
+	uint64_t run_id = qase_start_run(fake, "ET1", test_token);
 	assert(run_id == 123456);
 }
 
@@ -50,7 +52,7 @@ void test_start_run_returns_run_id()
 void test_start_run_handles_wrong_project()
 {
 	auto fake = make_fake_with_error("Project is not found.");
-	expect_qase_api_error(fake, [&]() { qase_start_run(fake, "ET1", "fake token"); }, "Project is not found.");
+	expect_qase_api_error(fake, [&]() { qase_start_run(fake, "ET1", test_token); }, "Project is not found.");
 }
 
 // when we're trying to call Qase API's bulk result method with the wrong project, there's no way to gracefully degrade, it should just throw
@@ -58,7 +60,7 @@ void test_submit_results_handles_wrong_project()
 {
 	auto fake = make_fake_with_error("Project is not found.");
 	expect_qase_api_error(fake, [&]() {
-			qase_submit_results(fake, "ET1", 123456, "fake token");
+			qase_submit_results(fake, "ET1", 123456, test_token);
 	}, "Project is not found.");
 }
 
@@ -68,7 +70,7 @@ void test_submit_results_happy_path()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	bool result = qase_submit_results(fake, "ET1", 123456, "fake token");
+	bool result = qase_submit_results(fake, "ET1", 123456, test_token);
 
 	assert(result == true && "Expected qase_submit_results to return true on success");
 }
@@ -80,7 +82,7 @@ void test_complete_run_handles_wrong_project()
 	auto fake = make_fake_with_error("Project is not found."); //when the error is Test run not found, the same logics would apply
 
 	expect_qase_api_error(fake, [&]() {
-			qase_complete_run(fake, "ET1", 123456, "fake token");
+			qase_complete_run(fake, "ET1", 123456, test_token);
 		}, "Project is not found.");
 }
 
@@ -90,7 +92,7 @@ void test_complete_run_happy_path()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	bool result = qase_complete_run(fake, "ET1", 123456, "fake token");
+	bool result = qase_complete_run(fake, "ET1", 123456, test_token);
 
 	assert(result == true && "Expected qase_complete_run to return true on success");
 }
@@ -101,7 +103,7 @@ void test_start_run_calls_correct_url()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
 
-	qase_start_run(fake, "ET1", "fake token");
+	qase_start_run(fake, "ET1", test_token);
 
 	assert(fake.called_url == "https://api.qase.io/v1/run/ET1");
 }
@@ -125,11 +127,9 @@ void test_start_run_sets_token_header()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
 
-	const std::string expected_token = "FAKE_TOKEN_456";
+	qase_start_run(fake, "ET1", test_token);
 
-	qase_start_run(fake, "ET1", expected_token);
-
-	expect_token_header_set(fake, expected_token);
+	expect_token_header_set(fake, test_token);
 }
 
 // qase_submit_results must receive the token and pass it in the HTTP header correctly
@@ -138,11 +138,9 @@ void test_submit_results_sets_token_header()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	const std::string expected_token = "FAKE_TOKEN_456";
+	qase_submit_results(fake, "ET1", 123456, test_token);
 
-	qase_submit_results(fake, "ET1", 123456, expected_token);
-
-	expect_token_header_set(fake, expected_token);
+	expect_token_header_set(fake, test_token);
 }
 
 // qase_complete_run must receive the token and pass it in the HTTP header correctly
@@ -151,11 +149,9 @@ void test_complete_run_sets_token_header()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	const std::string expected_token = "FAKE_TOKEN_456";
+	qase_complete_run(fake, "ET1", 123456, test_token);
 
-	qase_complete_run(fake, "ET1", 123456, expected_token);
-
-	expect_token_header_set(fake, expected_token);
+	expect_token_header_set(fake, test_token);
 }
 
 
