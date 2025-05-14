@@ -169,5 +169,9 @@ void test_submit_results_passes_payload_correctly()
 
 	qase_submit_results(fake, "ET1", 123456, expected_token, expected_payload);
 
-	assert(fake.called_payload == expected_payload && "Expected payload to be passed to HttpClient");
+	// parse both payloads as JSON and compare them structurally
+    auto expected_json = nlohmann::json::parse(expected_payload);
+    auto actual_json = nlohmann::json::parse(fake.called_payload);
+
+	assert(expected_json == actual_json && "Expected payload to be passed to HttpClient");
 }
