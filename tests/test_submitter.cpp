@@ -154,4 +154,20 @@ void test_complete_run_sets_token_header()
 	expect_token_header_set(fake, test_token);
 }
 
+// qase_submit_results must pass 
+void test_submit_results_passes_payload_correctly()
+{
+	FakeHttpClient fake;
+	fake.canned_response = R"({ "status": true })";
 
+	const std::string expected_payload = R"({
+        "results": [
+            { "case": { "title": "TestA" }, "status": "passed" },
+            { "case": { "title": "TestB" }, "status": "failed" }
+        ]
+    })";
+
+	qase_submit_results(fake, "ET1", 123456, expected_token, expected_payload);
+
+	assert(fake.called_payload == expected_payload && "Expected payload to be passed to HttpClient");
+}

@@ -28,6 +28,7 @@ int main()
 	RUN_TEST(test_start_run_sets_token_header);
 	RUN_TEST(test_submit_results_sets_token_header);
 	RUN_TEST(test_complete_run_sets_token_header);
+	RUN_TEST(test_submit_results_passes_payload_correctly);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
