@@ -213,7 +213,8 @@ void test_qase_submit_report_submits_results() {
 		return true;
 	};
 
-	qase_submit_report(fake_start_run, fake_submit_results, fake_complete_run);
+	FakeHttpClient fake_http;
+	qase_submit_report(fake_http, test_token, "ET-1", fake_start_run, fake_submit_results, fake_complete_run);
 
 	assert(
 			(call_sequence == std::vector<std::string>{"start_run", "submit_results", "complete_run"}) &&
