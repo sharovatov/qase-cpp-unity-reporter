@@ -27,4 +27,13 @@ namespace qase {
 	bool qase_submit_results(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token, const std::string& payload);
 	bool qase_complete_run(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token);
 
+	void qase_submit_report(
+			HttpClient& http,
+			const std::string& project_code,
+			const std::string& token,
+			const std::function<uint64_t()>& start_run,
+			const std::function<bool(const std::string&)>& submit_results,
+			const std::function<bool()>& complete_run
+		);
+
 }
