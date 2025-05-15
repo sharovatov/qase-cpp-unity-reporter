@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cassert>
 #include "qase_reporter.h"
 
 using namespace qase;
