@@ -7,6 +7,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Where to find your headers
 include_directories(include)
 
+cmake_policy(SET CMP0135 NEW)
+
 # Download the json lib
 include(FetchContent)
 FetchContent_Declare(
