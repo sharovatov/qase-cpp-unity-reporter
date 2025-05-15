@@ -179,4 +179,44 @@ void test_submit_results_passes_payload_correctly()
 	assert(expected_json == actual_json && "Expected payload to be passed to HttpClient");
 }
 
+// qase_submit_report must follow this flow:
+// 1. take all the results accumulated from qase_reporter_add_result calls
+// 2. start test run in Qase API with qase_start_run
+// 3. bulk submit all serialized results to Qase API with qase_submit_results
+// 4. complete test run in Qase API with qase_complete_run
+//
+// within this flow, correct parameters should be passed between functions
+void test_qase_submit_report_submits_results() {
+
+	// called functions will accumulated here
+	std::vector<std::string> call_sequence;
+
+	// qase_start_run returns uint64_t id of the newly created run
+	auto fake_start_run = [&]() -> uint64_t {
+		call_sequence.push_back("start_run");
+		return 123456;
+	};
+
+	// qase_submit_results returns true when the bulk submit is successful
+	auto fake_submit_results = [&](const std::string& payload) -> bool {
+		call_sequence.push_back("submit_results");
+
+		// there must be some payload (ideally - serialised test run results)
+		assert(!payload.empty() && "Expected non-empty payload to be passed to submit_results");
+
+		return true;
+	};
+
+	// qase_complete_run returns true when the run is successfully completed
+	auto fake_complete_run = [&]() -> bool {
+		call_sequence.push_back("complete_run");
+		return true;
+	};
+
+	qase_submit_report(fake_start_run, fake_submit_results, fake_complete_run);
+
+	assert(
+			(call_sequence == std::vector<std::string>{"start_run", "submit_results", "complete_run"}) &&
+			"Expected functions to be called in correct order");
+}
 
