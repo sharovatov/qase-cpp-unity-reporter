@@ -20,7 +20,7 @@ struct FakeHttpClient : public qase::HttpClient {
 const std::string test_token = "FAKE_TOKEN_456";
 const std::string empty_payload = "{ \"results\":[] }";
 
-template<typename Func>
+	template<typename Func>
 void expect_qase_api_error(FakeHttpClient& fake, Func api_call, const std::string& expected_message)
 {
 	bool exception_thrown = false;
@@ -64,7 +64,7 @@ void test_submit_results_handles_wrong_project()
 	auto fake = make_fake_with_error("Project is not found.");
 	expect_qase_api_error(fake, [&]() {
 			qase_submit_results(fake, "ET1", 123456, test_token, empty_payload);
-	}, "Project is not found.");
+			}, "Project is not found.");
 }
 
 // when Qase API responds with { "status": true }, it means that the submit_resuts worked fine!
@@ -86,7 +86,7 @@ void test_complete_run_handles_wrong_project()
 
 	expect_qase_api_error(fake, [&]() {
 			qase_complete_run(fake, "ET1", 123456, test_token);
-		}, "Project is not found.");
+			}, "Project is not found.");
 }
 
 // when Qase API responds with { "status": true }, qase_complete_run should return true
@@ -173,8 +173,10 @@ void test_submit_results_passes_payload_correctly()
 	qase_submit_results(fake, "ET1", 123456, test_token, expected_payload);
 
 	// parse both payloads as JSON and compare them structurally
-    auto expected_json = nlohmann::json::parse(expected_payload);
-    auto actual_json = nlohmann::json::parse(fake.called_payload);
+	auto expected_json = nlohmann::json::parse(expected_payload);
+	auto actual_json = nlohmann::json::parse(fake.called_payload);
 
 	assert(expected_json == actual_json && "Expected payload to be passed to HttpClient");
 }
+
+
