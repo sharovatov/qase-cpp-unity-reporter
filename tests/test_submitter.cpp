@@ -43,11 +43,12 @@ FakeHttpClient make_fake_with_error(const std::string& error_message) {
 // we need to receive run_id from qase to register current run results
 void test_start_run_returns_run_id()
 {
+	QaseApi api;
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
 
 	// qase_start_run must call HttpClient.post to retrieve the run_id from Qase API
-	uint64_t run_id = qase_start_run(fake, "ET1", test_token);
+	uint64_t run_id = api.qase_start_run(fake, "ET1", test_token);
 	assert(run_id == 123456);
 }
 
@@ -55,26 +56,29 @@ void test_start_run_returns_run_id()
 // and there's no way for us to gracefully degrade, we must throw
 void test_start_run_handles_wrong_project()
 {
+	QaseApi api;
 	auto fake = make_fake_with_error("Project is not found.");
-	expect_qase_api_error(fake, [&]() { qase_start_run(fake, "ET1", test_token); }, "Project is not found.");
+	expect_qase_api_error(fake, [&]() { api.qase_start_run(fake, "ET1", test_token); }, "Project is not found.");
 }
 
 // when we're trying to call Qase API's bulk result method with the wrong project, there's no way to gracefully degrade, it should just throw
 void test_submit_results_handles_wrong_project()
 {
+	QaseApi api;
 	auto fake = make_fake_with_error("Project is not found.");
 	expect_qase_api_error(fake, [&]() {
-			qase_submit_results(fake, "ET1", 123456, test_token, empty_payload);
+			api.qase_submit_results(fake, "ET1", 123456, test_token, empty_payload);
 			}, "Project is not found.");
 }
 
 // when Qase API responds with { "status": true }, it means that the submit_resuts worked fine!
 void test_submit_results_happy_path()
 {
+	QaseApi api;
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	bool result = qase_submit_results(fake, "ET1", 123456, test_token, empty_payload);
+	bool result = api.qase_submit_results(fake, "ET1", 123456, test_token, empty_payload);
 
 	assert(result == true && "Expected qase_submit_results to return true on success");
 }
@@ -83,20 +87,23 @@ void test_submit_results_happy_path()
 // Qase API returns an error, and we should throw
 void test_complete_run_handles_wrong_project()
 {
+	QaseApi api;
+
 	auto fake = make_fake_with_error("Project is not found."); //when the error is Test run not found, the same logics would apply
 
 	expect_qase_api_error(fake, [&]() {
-			qase_complete_run(fake, "ET1", 123456, test_token);
+			api.qase_complete_run(fake, "ET1", 123456, test_token);
 			}, "Project is not found.");
 }
 
 // when Qase API responds with { "status": true }, qase_complete_run should return true
 void test_complete_run_happy_path()
 {
+	QaseApi api;
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	bool result = qase_complete_run(fake, "ET1", 123456, test_token);
+	bool result = api.qase_complete_run(fake, "ET1", 123456, test_token);
 
 	assert(result == true && "Expected qase_complete_run to return true on success");
 }
@@ -104,10 +111,11 @@ void test_complete_run_happy_path()
 // now we need to make sure that qase_start_run correctly creates the URL
 void test_start_run_calls_correct_url()
 {
+	QaseApi api;
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
 
-	qase_start_run(fake, "ET1", test_token);
+	api.qase_start_run(fake, "ET1", test_token);
 
 	assert(fake.called_url == "https://api.qase.io/v1/run/ET1");
 }
@@ -128,10 +136,11 @@ void expect_token_header_set(FakeHttpClient& fake, const std::string& expected_t
 // qase_start_run must receive the token and pass it in the HTTP header correctly
 void test_start_run_sets_token_header()
 {
+	QaseApi api;
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
 
-	qase_start_run(fake, "ET1", test_token);
+	api.qase_start_run(fake, "ET1", test_token);
 
 	expect_token_header_set(fake, test_token);
 }
@@ -139,10 +148,11 @@ void test_start_run_sets_token_header()
 // qase_submit_results must receive the token and pass it in the HTTP header correctly
 void test_submit_results_sets_token_header()
 {
+	QaseApi api;
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	qase_submit_results(fake, "ET1", 123456, test_token, empty_payload);
+	api.qase_submit_results(fake, "ET1", 123456, test_token, empty_payload);
 
 	expect_token_header_set(fake, test_token);
 }
@@ -150,10 +160,11 @@ void test_submit_results_sets_token_header()
 // qase_complete_run must receive the token and pass it in the HTTP header correctly
 void test_complete_run_sets_token_header()
 {
+	QaseApi api;
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	qase_complete_run(fake, "ET1", 123456, test_token);
+	api.qase_complete_run(fake, "ET1", 123456, test_token);
 
 	expect_token_header_set(fake, test_token);
 }
@@ -161,6 +172,7 @@ void test_complete_run_sets_token_header()
 // qase_submit_results must pass the payload to HTTP
 void test_submit_results_passes_payload_correctly()
 {
+	QaseApi api;
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
@@ -171,7 +183,7 @@ void test_submit_results_passes_payload_correctly()
         ]
     })";
 
-	qase_submit_results(fake, "ET1", 123456, test_token, expected_payload);
+	api.qase_submit_results(fake, "ET1", 123456, test_token, expected_payload);
 
 	// parse both payloads as JSON and compare them structurally
 	auto expected_json = nlohmann::json::parse(expected_payload);
