@@ -23,15 +23,17 @@ namespace qase {
 
 	std::string qase_reporter_serialize_to_json();
 
-	uint64_t qase_start_run(HttpClient& http, const std::string& project_code, const std::string& token);
-	bool qase_submit_results(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token, const std::string& payload);
-	bool qase_complete_run(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token);
-
 	struct IQaseApi {
 		virtual uint64_t qase_start_run(HttpClient&, const std::string&, const std::string&) = 0;
 		virtual bool qase_submit_results(HttpClient&, const std::string&, uint64_t, const std::string&, const std::string&) = 0;
 		virtual bool qase_complete_run(HttpClient&, const std::string&, uint64_t, const std::string&) = 0;
 		virtual ~IQaseApi() = default;
+	};
+
+	struct QaseApi : public IQaseApi {
+		uint64_t qase_start_run(HttpClient&, const std::string&, const std::string&) override;
+		bool qase_submit_results(HttpClient&, const std::string&, uint64_t, const std::string&, const std::string&) override;
+		bool qase_complete_run(HttpClient&, const std::string&, uint64_t, const std::string&) override;
 	};
 
 	void qase_submit_report(
