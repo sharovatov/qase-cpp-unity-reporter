@@ -197,18 +197,32 @@ void test_submit_results_passes_payload_correctly()
 struct FakeQaseApi : public IQaseApi {
 	std::vector<std::string> calls;
 
-	uint64_t qase_start_run(HttpClient&, const std::string&, const std::string&) override {
+	// captured arguments
+	std::string start_project_code;
+	std::string start_token;
+
+	uint64_t submit_run_id = 0;
+	std::string submit_payload;
+
+	uint64_t complete_run_id = 0;
+
+	uint64_t qase_start_run(HttpClient&, const std::string& project_code, const std::string& token) override {
 		calls.push_back("start");
+		start_project_code = project_code;
+		start_token = token;
 		return 42;
 	}
 
-	bool qase_submit_results(HttpClient&, const std::string&, uint64_t, const std::string&, const std::string&) override {
+	bool qase_submit_results(HttpClient&, const std::string&, uint64_t run_id, const std::string&, const std::string& payload) override {
 		calls.push_back("submit");
+		submit_run_id = run_id;
+		submit_payload = payload;
 		return true;
 	}
 
-	bool qase_complete_run(HttpClient&, const std::string&, uint64_t, const std::string&) override {
+	bool qase_complete_run(HttpClient&, const std::string&, uint64_t run_id, const std::string&) override {
 		calls.push_back("complete");
+		complete_run_id = run_id;
 		return true;
 	}
 };
