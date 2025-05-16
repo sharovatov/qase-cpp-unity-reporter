@@ -180,6 +180,7 @@ void test_submit_results_passes_payload_correctly()
 	assert(expected_json == actual_json && "Expected payload to be passed to HttpClient");
 }
 
+/*
 // qase_submit_report must follow this flow:
 // 1. take all the results accumulated from qase_reporter_add_result calls
 // 2. start test run in Qase API with qase_start_run
@@ -221,4 +222,35 @@ void test_qase_submit_report_submits_results() {
 			(call_sequence == std::vector<std::string>{"start_run", "submit_results", "complete_run"}) &&
 			"Expected functions to be called in correct order");
 }
+*/
 
+struct RecordingApi : public IQaseApi {
+	std::vector<std::string> calls;
+
+	uint64_t qase_start_run(HttpClient&, const std::string&, const std::string&) override {
+		calls.push_back("start");
+		return 42;
+	}
+
+	bool qase_submit_results(HttpClient&, const std::string&, uint64_t, const std::string&, const std::string&) override {
+		calls.push_back("submit");
+		return true;
+	}
+
+	bool qase_complete_run(HttpClient&, const std::string&, uint64_t, const std::string&) override {
+		calls.push_back("complete");
+		return true;
+	}
+};
+
+void test_orchestrator_uses_iqaseapi_flow() {
+	RecordingApi api;
+	FakeHttpClient client;
+
+	qase_reporter_reset();
+	qase_reporter_add_result("dummy", true);
+
+	qase_submit_report(api, client, "ET1", test_token);
+
+	assert((api.calls == std::vector<std::string>{"start", "submit", "complete"}));
+}
