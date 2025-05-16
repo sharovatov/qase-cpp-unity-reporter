@@ -218,6 +218,8 @@ struct FakeQaseApi : public IQaseApi {
 // 2. start test run in Qase API with qase_start_run
 // 3. bulk submit all serialized results to Qase API with qase_submit_results
 // 4. complete test run in Qase API with qase_complete_run
+//
+// also all the parameters passing is checked
 void test_orchestrator_uses_iqaseapi_flow() {
 	FakeQaseApi api;
 	FakeHttpClient client;
@@ -225,10 +227,17 @@ void test_orchestrator_uses_iqaseapi_flow() {
 	qase_reporter_reset();
 	qase_reporter_add_result("dummy", true);
 
-	qase_submit_report(api, client, "ET1", test_token);
+	const std::string expected_project_code = "ET1";
 
+	qase_submit_report(api, client, expected_project_code, test_token);
+
+	// make sure the flow is correct
 	assert((api.calls == std::vector<std::string>{"start", "submit", "complete"}));
+
+	// make sure qase_submit_report passes parameters correctly between api calls
+	assert(api.start_project_code == expected_project_code);
+	assert(api.start_token == test_token);
+	assert(api.submit_run_id == 42);
+	assert(!api.submit_payload.empty());
+	assert(api.complete_run_id == 42);
 }
-
-// within this flow, correct parameters should be passed between functions
-
