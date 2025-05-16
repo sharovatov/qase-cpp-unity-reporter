@@ -27,13 +27,18 @@ namespace qase {
 	bool qase_submit_results(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token, const std::string& payload);
 	bool qase_complete_run(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token);
 
+	struct IQaseApi {
+		virtual uint64_t qase_start_run(HttpClient&, const std::string&, const std::string&) = 0;
+		virtual bool qase_submit_results(HttpClient&, const std::string&, uint64_t, const std::string&, const std::string&) = 0;
+		virtual bool qase_complete_run(HttpClient&, const std::string&, uint64_t, const std::string&) = 0;
+		virtual ~IQaseApi() = default;
+	};
+
 	void qase_submit_report(
+			IQaseApi& api,
 			HttpClient& http,
 			const std::string& project_code,
-			const std::string& token,
-			const std::function<uint64_t()>& start_run,
-			const std::function<bool(const std::string&)>& submit_results,
-			const std::function<bool()>& complete_run
+			const std::string& token
 		);
 
 }
