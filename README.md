@@ -33,6 +33,6 @@
 - [x] Test results collection — `qase_reporter_add_result`
 - [x] JSON serialization — `qase_reporter_serialize_to_json`
 - [ ] Support for the file config for `QASE_API_TOKEN`, `QASE_PROJECT_CODE`
-- [ ] Starting the test run via `POST /run/{projectCode}`
-- [ ] Submitting results to Qase via `POST /result/{projectCode}/{runId}/bulk`
-- [ ] Completing the run via `PATCH /run/{projectCode}/{runId}/complete`
+- [x] Starting the test run via `POST /run/{projectCode}`
+- [x] Submitting results to Qase via `POST /result/{projectCode}/{runId}/bulk`
+- [x] Completing the run via `PATCH /run/{projectCode}/{runId}/complete`
