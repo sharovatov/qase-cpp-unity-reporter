@@ -255,3 +255,16 @@ void test_orchestrator_uses_iqaseapi_flow() {
 	assert(!api.submit_payload.empty());
 	assert(api.complete_run_id == 42);
 }
+
+// no results recorded — qase_submit_report should do nothing
+void test_orchestrator_does_nothing_if_no_results() {
+	FakeQaseApi api;
+	FakeHttpClient client;
+
+	qase_reporter_reset();
+
+	qase_submit_report(api, client, "ET1", test_token);
+
+	// Expect no API calls to have happened
+	assert(api.calls.empty() && "Expected no API calls if no results are present");
+}
