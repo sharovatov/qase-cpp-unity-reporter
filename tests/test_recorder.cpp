@@ -73,7 +73,7 @@ void test_results_are_serialized_to_json()
 		{ "SecondTest", false }
 	};
 
-	std::string json = qase_reporter_serialize_to_json(results);
+	std::string json = qase_serialize_results(results);
 
 	assert(json.find("\"results\"") != std::string::npos);
 	assert(json.find("\"title\":\"MyFirstTest\"") != std::string::npos);
