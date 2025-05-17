@@ -21,7 +21,7 @@ namespace qase {
 
 	void qase_reporter_reset();
 
-	std::string qase_reporter_serialize_to_json();
+	std::string qase_reporter_serialize_to_json(const std::vector<TestResult>& results);
 
 	struct IQaseApi {
 		virtual uint64_t qase_start_run(HttpClient&, const std::string&, const std::string&) = 0;

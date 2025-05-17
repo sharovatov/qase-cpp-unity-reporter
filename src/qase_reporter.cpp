@@ -35,7 +35,7 @@ namespace qase {
 		collected.clear();
 	}
 
-	std::string qase_reporter_serialize_to_json() {
+	std::string qase_reporter_serialize_to_json(const std::vector<TestResult>& collected) {
 		json root;
 		root["results"] = json::array();
 
@@ -129,7 +129,7 @@ namespace qase {
 		}
 
 		// step 1: take all serialised results accumulated from qase_reporter_add_result calls
-		const std::string payload = qase_reporter_serialize_to_json();
+		const std::string payload = qase_reporter_serialize_to_json(results);
 
 		// step 2: start test run in Qase API with qase_start_run
 		uint64_t run_id = api.qase_start_run(http, project_code, token);
