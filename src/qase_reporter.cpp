@@ -122,7 +122,13 @@ namespace qase {
 			const std::string& token
 		) {
 
-		// step 1: take all the results accumulated from qase_reporter_add_result calls
+		// step 0: take all the results accumulated from qase_reporter_add_result calls
+		const auto& results = qase_reporter_get_results();
+		if (results.empty()) {
+			return; // nothing to submit, skip orchestration
+		}
+
+		// step 1: take all serialised results accumulated from qase_reporter_add_result calls
 		const std::string payload = qase_reporter_serialize_to_json();
 
 		// step 2: start test run in Qase API with qase_start_run
