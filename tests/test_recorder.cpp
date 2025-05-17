@@ -68,11 +68,12 @@ void test_multiple_results_are_stored_correctly()
 // qase reporter serialises accumulated test results to json
 void test_results_are_serialized_to_json()
 {
-	qase_reporter_reset();
-	qase_reporter_add_result("MyFirstTest", true);
-	qase_reporter_add_result("SecondTest", false);
+	std::vector<TestResult> results = {
+		{ "MyFirstTest", true },
+		{ "SecondTest", false }
+	};
 
-	std::string json = qase_reporter_serialize_to_json();
+	std::string json = qase_reporter_serialize_to_json(results);
 
 	assert(json.find("\"results\"") != std::string::npos);
 	assert(json.find("\"title\":\"MyFirstTest\"") != std::string::npos);
