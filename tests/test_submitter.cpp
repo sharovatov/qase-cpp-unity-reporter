@@ -268,3 +268,31 @@ void test_orchestrator_does_nothing_if_no_results() {
 	// Expect no API calls to have happened
 	assert(api.calls.empty() && "Expected no API calls if no results are present");
 }
+
+// token, host and project code should be taken from the config file
+void test_load_qase_config_parses_fields_correctly()
+{
+	const std::string config_path = "test_data/qase_config.json";
+
+	// write the temporary file
+	std::ofstream out(config_path);
+	out << R"({
+		"testops": {
+			"api": {
+				"token": "MY_TEST_TOKEN",
+				"host": "qase.test"
+			},
+			"project": "ET-1"
+		}
+	})";
+	out.close();
+
+	QaseConfig cfg = load_qase_config(config_path);
+
+	assert(cfg.token == "MY_TEST_TOKEN");
+	assert(cfg.host == "api.qase.io");
+	assert(cfg.project == "ET-1");
+
+	// remove the temp file
+	std::remove(config_path.c_str());
+}

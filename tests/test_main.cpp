@@ -30,6 +30,7 @@ int main()
 	RUN_TEST(test_complete_run_sets_token_header);
 	RUN_TEST(test_orchestrator_uses_iqaseapi_flow);
 	RUN_TEST(test_orchestrator_does_nothing_if_no_results);
+	RUN_TEST(test_load_qase_config_parses_fields_correctly);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
