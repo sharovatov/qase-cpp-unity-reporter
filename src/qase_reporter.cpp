@@ -60,9 +60,6 @@ namespace qase {
 		};
 	}
 
-	// Qase API url
-	const std::string api_url = "https://api.qase.io/v1/";
-
 	inline std::string qase_api_base(const QaseConfig& cfg) {
 		return "https://" + cfg.host + "/v1/";
 	}
