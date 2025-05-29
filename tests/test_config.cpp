@@ -65,3 +65,31 @@ void test_load_qase_config_throws_on_invalid_json() {
 
 	std::remove(config_path.c_str());
 }
+
+void test_load_qase_config_throws_on_missing_fields() {
+	const std::string config_path = "missing_fields_config.json";
+
+	std::ofstream out(config_path);
+	out << R"({
+		"testops": {
+			"api": {
+				"token": "MY_TEST_TOKEN"
+				// no "host" value
+			}
+			// no "project" value
+		}
+	})";
+	out.close();
+
+	bool threw = false;
+	try {
+		load_qase_config(config_path);
+	} catch (const std::runtime_error& e) {
+		std::string msg = e.what();
+		threw = msg.find("Missing required field") != std::string::npos;
+	}
+
+	assert(threw && "Expected exception due to missing required fields");
+
+	std::remove(config_path.c_str());
+}
