@@ -83,9 +83,12 @@ namespace qase {
 		throw std::runtime_error("qase_start_run unknown error");
 	}
 
-	bool QaseApi::qase_submit_results(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token, const std::string& payload) {
-		const std::string url = api_url + "result/" + project_code + "/" + std::to_string(run_id) + "/bulk";
-		const auto headers = make_headers(token);
+//	bool QaseApi::qase_submit_results(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token, const std::string& payload) {
+
+	bool QaseApi::qase_submit_results(HttpClient& http, const QaseConfig& cfg, uint64_t run_id, const std::string& payload) {
+
+		const std::string url = "https://" + cfg.host + "/v1/result/" + cfg.project + "/" + std::to_string(run_id) + "/bulk";
+		const auto headers = make_headers(cfg.token);
 
 		std::string response = http.post(url, payload, headers);
 		auto json = nlohmann::json::parse(response);
@@ -138,7 +141,7 @@ namespace qase {
 		uint64_t run_id = api.qase_start_run(http, cfg);
 
 		// step 3: bulk submit all serialized results to Qase API with qase_submit_results
-		bool bulk_result = api.qase_submit_results(http, project_code, run_id, token, payload);
+		bool bulk_result = api.qase_submit_results(http, cfg, run_id, payload);
 
 		// step 4: complete test run in Qase API with qase_complete_run
 		bool completed = api.qase_complete_run(http, project_code, run_id, token);

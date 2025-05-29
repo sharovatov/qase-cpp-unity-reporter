@@ -80,8 +80,9 @@ void test_submit_results_handles_wrong_project()
 {
 	QaseApi api;
 	auto fake = make_fake_with_error("Project is not found.");
+	QaseConfig cfg = make_test_config();
 	expect_qase_api_error(fake, [&]() {
-			api.qase_submit_results(fake, "ET1", 123456, test_token, empty_payload);
+			api.qase_submit_results(fake, cfg, 123456, empty_payload);
 			}, "Project is not found.");
 }
 
@@ -92,7 +93,9 @@ void test_submit_results_happy_path()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	bool result = api.qase_submit_results(fake, "ET1", 123456, test_token, empty_payload);
+	QaseConfig cfg = make_test_config();
+
+	bool result = api.qase_submit_results(fake, cfg, 123456, empty_payload);
 
 	assert(result == true && "Expected qase_submit_results to return true on success");
 }
@@ -170,7 +173,9 @@ void test_submit_results_sets_token_header()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	api.qase_submit_results(fake, "ET1", 123456, test_token, empty_payload);
+	QaseConfig cfg = make_test_config();
+
+	api.qase_submit_results(fake, cfg, 123456, empty_payload);
 
 	expect_token_header_set(fake, test_token);
 }
@@ -201,7 +206,9 @@ void test_submit_results_passes_payload_correctly()
         ]
     })";
 
-	api.qase_submit_results(fake, "ET1", 123456, test_token, expected_payload);
+	QaseConfig cfg = make_test_config();
+
+	api.qase_submit_results(fake, cfg, 123456, expected_payload);
 
 	// parse both payloads as JSON and compare them structurally
 	auto expected_json = nlohmann::json::parse(expected_payload);
@@ -231,7 +238,7 @@ struct FakeQaseApi : public IQaseApi {
 		return 42;
 	}
 
-	bool qase_submit_results(HttpClient&, const std::string&, uint64_t run_id, const std::string&, const std::string& payload) override {
+	bool qase_submit_results(HttpClient&, const QaseConfig& cfg, uint64_t run_id, const std::string& payload) override {
 		calls.push_back("submit");
 		submit_run_id = run_id;
 		submit_payload = payload;
