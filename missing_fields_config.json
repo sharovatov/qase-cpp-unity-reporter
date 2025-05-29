@@ -1,9 +1,0 @@
-{
-		"testops": {
-			"api": {
-				"token": "MY_TEST_TOKEN"
-				// no "host" value
-			}
-			// no "project" value
-		}
-	}

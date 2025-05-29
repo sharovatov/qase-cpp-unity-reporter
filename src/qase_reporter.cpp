@@ -156,6 +156,14 @@ namespace qase {
 			throw std::runtime_error("Failed to parse JSON: " + std::string(e.what()));
 		}
 
+		// testops.project, testops.api.token and testops.api.host must be readable
+		if (!j.contains("testops") || !j["testops"].contains("api") || 
+				!j["testops"]["api"].contains("token") ||
+				!j["testops"]["api"].contains("host") ||
+				!j["testops"].contains("project")) {
+			throw std::runtime_error("Missing required field(s) in config");
+		}
+
 		QaseConfig cfg;
 		cfg.token = j["testops"]["api"]["token"].get<std::string>();
 		cfg.host = j["testops"]["api"]["host"].get<std::string>();

@@ -1,4 +1,4 @@
-#include <iostream>
+Ginclude <iostream>
 #include <cassert>
 #include <fstream> // maybe we need to include and use fstreams only when built to do so?
 #include "qase_reporter.h"
@@ -70,14 +70,9 @@ void test_load_qase_config_throws_on_missing_fields() {
 	const std::string config_path = "missing_fields_config.json";
 
 	std::ofstream out(config_path);
+	// json with only a token, but no host or a project
 	out << R"({
-		"testops": {
-			"api": {
-				"token": "MY_TEST_TOKEN"
-				// no "host" value
-			}
-			// no "project" value
-		}
+		"testops": {"api": {"token": "MY_TEST_TOKEN"}}
 	})";
 	out.close();
 
