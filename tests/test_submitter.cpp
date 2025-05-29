@@ -266,7 +266,12 @@ void test_orchestrator_does_nothing_if_no_results() {
 
 	qase_reporter_reset();
 
-	qase_submit_report(api, client, "ET1", test_token);
+	QaseConfig cfg;
+	cfg.project = "ET1";
+	cfg.token = test_token;
+	cfg.host = "api.qase.io";
+
+	qase_submit_report(api, client, cfg);
 
 	// Expect no API calls to have happened
 	assert(api.calls.empty() && "Expected no API calls if no results are present");

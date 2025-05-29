@@ -36,18 +36,17 @@ namespace qase {
 		bool qase_complete_run(HttpClient&, const std::string&, uint64_t, const std::string&) override;
 	};
 
-	void qase_submit_report(
-			IQaseApi& api,
-			HttpClient& http,
-			const std::string& project_code,
-			const std::string& token
-		);
-
 	struct QaseConfig {
 		std::string token;
 		std::string host;
 		std::string project;
 	};
+
+	void qase_submit_report(
+			IQaseApi& api,
+			HttpClient& http,
+			QaseConfig& cfg
+		);
 
 	QaseConfig load_qase_config(const std::string& path);
 }

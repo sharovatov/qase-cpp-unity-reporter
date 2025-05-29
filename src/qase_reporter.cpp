@@ -119,9 +119,11 @@ namespace qase {
 	void qase_submit_report(
 			IQaseApi& api,
 			HttpClient& http,
-			const std::string& project_code,
-			const std::string& token
+			QaseConfig& cfg
 		) {
+
+		const auto& project_code = cfg.project;
+		const auto& token = cfg.token;
 
 		// step 0: take all the results accumulated from qase_reporter_add_result calls
 		const auto& results = qase_reporter_get_results();
