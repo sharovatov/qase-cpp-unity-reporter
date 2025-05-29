@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cassert>
-#include <fstream> // maybe we need to include and use fstreams only when built to do so?
+#include <fstream>
 #include "qase_reporter.h"
 
 using namespace qase;

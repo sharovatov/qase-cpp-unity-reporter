@@ -1,6 +1,10 @@
 #include <nlohmann/json.hpp>
 #include "qase_reporter.h"
-#include <fstream> // maybe we should include it only when built with fs support?
+#ifndef ESP_PLATFORM
+// fstream is used only in config file reader
+// and config file reader is not supported on ESP32
+#include <fstream>
+#endif
 
 using json = nlohmann::json;
 
@@ -148,6 +152,8 @@ namespace qase {
 
 	}
 
+	// ========= READING CONFIG FROM A FILE IS NOT AVAILABLE ON ESP32 =======
+	#ifndef ESP_PLATFORM
 	QaseConfig load_qase_config(const std::string& path) {
 		std::ifstream f(path);
 		if (!f.is_open()) {
@@ -180,5 +186,7 @@ namespace qase {
 
 		return cfg;
 	}
+	#endif
+
 
 }
