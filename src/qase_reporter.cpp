@@ -168,6 +168,11 @@ namespace qase {
 		cfg.token = j["testops"]["api"]["token"].get<std::string>();
 		cfg.host = j["testops"]["api"]["host"].get<std::string>();
 		cfg.project = j["testops"]["project"].get<std::string>();
+
+		if (cfg.token.empty() || cfg.host.empty() || cfg.project.empty()) {
+			throw std::runtime_error("Config fields must not be empty");
+		}
+
 		return cfg;
 	}
 
