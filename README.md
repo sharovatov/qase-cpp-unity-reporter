@@ -35,7 +35,7 @@
 - [x] start the test run via API `POST /run/{projectCode}`
 - [x] submitting test results via API `POST /result/{projectCode}/{runId}/bulk`
 - [x] complete the run via API `PATCH /run/{projectCode}/{runId}/complete`
-- [ ] Support for the file config for `QASE_API_TOKEN`, `QASE_PROJECT_CODE`
+- [x] Support for the file config for `QASE_API_TOKEN`, `QASE_PROJECT_CODE`
 - [ ] Support all other features from the [config file](https://github.com/qase-tms/qase-javascript/tree/main/qase-javascript-commons#configuration)
 - [ ] Move bulk results submittion to API v2
 - [ ] Support saving to a JSON file without submitting to Qase like [here](https://github.com/qase-tms/specs/tree/master/report)
