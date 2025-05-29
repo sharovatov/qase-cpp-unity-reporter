@@ -63,10 +63,13 @@ namespace qase {
 	// Qase API url
 	const std::string api_url = "https://api.qase.io/v1/";
 
+	inline std::string qase_api_base(const QaseConfig& cfg) {
+		return "https://" + cfg.host + "/v1/";
+	}
 
 	// qase_start_run should call Qase API and return new test run
 	uint64_t QaseApi::qase_start_run(HttpClient& http, const QaseConfig& cfg) {
-		const std::string url = "https://" + cfg.host + "/v1/run/" + cfg.project;
+		const std::string url = qase_api_base(cfg) + "run/" + cfg.project;
 		const std::string payload = R"({ "title": "Unity Test Run", "include_all_cases": true })";
 		const auto headers = make_headers(cfg.token);
 
@@ -87,7 +90,7 @@ namespace qase {
 
 	bool QaseApi::qase_submit_results(HttpClient& http, const QaseConfig& cfg, uint64_t run_id, const std::string& payload) {
 
-		const std::string url = "https://" + cfg.host + "/v1/result/" + cfg.project + "/" + std::to_string(run_id) + "/bulk";
+		const std::string url = qase_api_base(cfg) + "result/" + cfg.project + "/" + std::to_string(run_id) + "/bulk";
 		const auto headers = make_headers(cfg.token);
 
 		std::string response = http.post(url, payload, headers);
@@ -101,7 +104,7 @@ namespace qase {
 
 	bool QaseApi::qase_complete_run(HttpClient& http, const QaseConfig& cfg, uint64_t run_id) {
 
-		const std::string url = "https://" + cfg.host + "/v1/run/" + cfg.project + "/" + std::to_string(run_id) + "/complete";
+		const std::string url = qase_api_base(cfg) + "run/" + cfg.project + "/" + std::to_string(run_id) + "/complete";
 
 		const auto headers = make_headers(cfg.token);
 
