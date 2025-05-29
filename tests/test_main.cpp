@@ -33,6 +33,7 @@ int main()
 	RUN_TEST(test_orchestrator_does_nothing_if_no_results);
 	RUN_TEST(test_load_qase_config_parses_fields_correctly);
 	RUN_TEST(test_load_qase_config_throws_if_file_missing);
+	RUN_TEST(test_load_qase_config_throws_on_invalid_json);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 

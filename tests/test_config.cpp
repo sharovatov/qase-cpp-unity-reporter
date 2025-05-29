@@ -1,5 +1,9 @@
 #include <iostream>
+#include <cassert>
 #include <fstream> // maybe we need to include and use fstreams only when built to do so?
+#include "qase_reporter.h"
+
+using namespace qase;
 
 // token, host and project code should be taken from the config file
 void test_load_qase_config_parses_fields_correctly()
@@ -40,4 +44,24 @@ void test_load_qase_config_throws_if_file_missing() {
 	}
 
 	assert(threw && "Expected load_qase_config to throw if file does not exist");
+}
+
+void test_load_qase_config_throws_on_invalid_json() {
+	const std::string config_path = "invalid_json_config.json";
+
+	// write a deliberately malformed JSON
+	std::ofstream out(config_path);
+	out << "{ this is not valid json ";
+	out.close();
+
+	bool threw = false;
+	try {
+		load_qase_config(config_path);
+	} catch (const std::runtime_error& e) {
+		threw = std::string(e.what()).find("Failed to parse JSON") != std::string::npos;
+	}
+
+	assert(threw && "Expected load_qase_config to throw on invalid JSON");
+
+	std::remove(config_path.c_str());
 }
