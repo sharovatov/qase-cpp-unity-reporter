@@ -108,8 +108,10 @@ void test_complete_run_handles_wrong_project()
 
 	auto fake = make_fake_with_error("Project is not found."); //when the error is Test run not found, the same logics would apply
 
+	QaseConfig cfg = make_test_config();
+
 	expect_qase_api_error(fake, [&]() {
-			api.qase_complete_run(fake, "ET1", 123456, test_token);
+			api.qase_complete_run(fake, cfg, 123456);
 			}, "Project is not found.");
 }
 
@@ -120,7 +122,9 @@ void test_complete_run_happy_path()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	bool result = api.qase_complete_run(fake, "ET1", 123456, test_token);
+	QaseConfig cfg = make_test_config();
+
+	bool result = api.qase_complete_run(fake, cfg, 123456);
 
 	assert(result == true && "Expected qase_complete_run to return true on success");
 }
@@ -187,7 +191,9 @@ void test_complete_run_sets_token_header()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true })";
 
-	api.qase_complete_run(fake, "ET1", 123456, test_token);
+	QaseConfig cfg = make_test_config();
+
+	api.qase_complete_run(fake, cfg, 123456);
 
 	expect_token_header_set(fake, test_token);
 }
@@ -245,7 +251,7 @@ struct FakeQaseApi : public IQaseApi {
 		return true;
 	}
 
-	bool qase_complete_run(HttpClient&, const std::string&, uint64_t run_id, const std::string&) override {
+	bool qase_complete_run(HttpClient&, const QaseConfig&, uint64_t run_id) override {
 		calls.push_back("complete");
 		complete_run_id = run_id;
 		return true;

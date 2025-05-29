@@ -99,11 +99,11 @@ namespace qase {
 
 	}
 
-	bool QaseApi::qase_complete_run(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token) {
+	bool QaseApi::qase_complete_run(HttpClient& http, const QaseConfig& cfg, uint64_t run_id) {
 
-		const std::string url = api_url + "run/" + project_code + "/" + std::to_string(run_id) + "/complete";
+		const std::string url = "https://" + cfg.host + "/v1/run/" + cfg.project + "/" + std::to_string(run_id) + "/complete";
 
-		const auto headers = make_headers(token);
+		const auto headers = make_headers(cfg.token);
 
 		std::string response = http.post(url, "", headers);
 		auto json = nlohmann::json::parse(response);
@@ -144,7 +144,7 @@ namespace qase {
 		bool bulk_result = api.qase_submit_results(http, cfg, run_id, payload);
 
 		// step 4: complete test run in Qase API with qase_complete_run
-		bool completed = api.qase_complete_run(http, project_code, run_id, token);
+		bool completed = api.qase_complete_run(http, cfg, run_id);
 
 	}
 

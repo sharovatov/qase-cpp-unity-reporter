@@ -32,14 +32,14 @@ namespace qase {
 	struct IQaseApi {
 		virtual uint64_t qase_start_run(HttpClient&, const QaseConfig&) = 0;
 		virtual bool qase_submit_results(HttpClient&, const QaseConfig&, uint64_t, const std::string&) = 0;
-		virtual bool qase_complete_run(HttpClient&, const std::string&, uint64_t, const std::string&) = 0;
+		virtual bool qase_complete_run(HttpClient&, const QaseConfig&, uint64_t) = 0;
 		virtual ~IQaseApi() = default;
 	};
 
 	struct QaseApi : public IQaseApi {
 		uint64_t qase_start_run(HttpClient&, const QaseConfig& cfg) override;
 		bool qase_submit_results(HttpClient&, const QaseConfig&, uint64_t, const std::string&) override;
-		bool qase_complete_run(HttpClient&, const std::string&, uint64_t, const std::string&) override;
+		bool qase_complete_run(HttpClient&, const QaseConfig&, uint64_t) override;
 	};
 
 	void qase_submit_report(
