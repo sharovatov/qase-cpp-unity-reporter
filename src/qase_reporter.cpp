@@ -150,7 +150,11 @@ namespace qase {
 		}
 
 		nlohmann::json j;
-		f >> j;
+		try {
+			f >> j;
+		} catch (const nlohmann::json::parse_error& e) {
+			throw std::runtime_error("Failed to parse JSON: " + std::string(e.what()));
+		}
 
 		QaseConfig cfg;
 		cfg.token = j["testops"]["api"]["token"].get<std::string>();
