@@ -227,6 +227,14 @@ struct FakeQaseApi : public IQaseApi {
 	}
 };
 
+QaseConfig make_test_config() {
+	QaseConfig cfg;
+	cfg.project = "ET1";
+	cfg.token = test_token;
+	cfg.host = "api.qase.io";
+	return cfg;
+}
+
 // qase_submit_report must follow this flow:
 // 1. take all the results accumulated from qase_reporter_add_result calls
 // 2. start test run in Qase API with qase_start_run
@@ -236,17 +244,14 @@ struct FakeQaseApi : public IQaseApi {
 // also all the parameters passing is checked
 void test_orchestrator_uses_iqaseapi_flow() {
 	FakeQaseApi api;
-	FakeHttpClient client;
+	FakeHttpClient http;
 
 	qase_reporter_reset();
 	qase_reporter_add_result("dummy", true);
 
-	QaseConfig cfg;
-	cfg.project = "ET1";
-	cfg.token = test_token;
-	cfg.host = "api.qase.io";
+	QaseConfig cfg = make_test_config();
 
-	qase_submit_report(api, client, cfg);
+	qase_submit_report(api, http, cfg);
 
 	// make sure the flow is correct
 	assert((api.calls == std::vector<std::string>{"start", "submit", "complete"}));
@@ -262,16 +267,13 @@ void test_orchestrator_uses_iqaseapi_flow() {
 // no results recorded — qase_submit_report should do nothing
 void test_orchestrator_does_nothing_if_no_results() {
 	FakeQaseApi api;
-	FakeHttpClient client;
+	FakeHttpClient http;
 
 	qase_reporter_reset();
 
-	QaseConfig cfg;
-	cfg.project = "ET1";
-	cfg.token = test_token;
-	cfg.host = "api.qase.io";
+	QaseConfig cfg = make_test_config();
 
-	qase_submit_report(api, client, cfg);
+	qase_submit_report(api, http, cfg);
 
 	// Expect no API calls to have happened
 	assert(api.calls.empty() && "Expected no API calls if no results are present");
