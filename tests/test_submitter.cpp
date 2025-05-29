@@ -21,6 +21,16 @@ struct FakeHttpClient : public qase::HttpClient {
 const std::string test_token = "FAKE_TOKEN_456";
 const std::string empty_payload = "{ \"results\":[] }";
 
+
+QaseConfig make_test_config() {
+	QaseConfig cfg;
+	cfg.project = "ET1";
+	cfg.token = test_token;
+	cfg.host = "api.qase.io";
+	return cfg;
+}
+
+
 	template<typename Func>
 void expect_qase_api_error(FakeHttpClient& fake, Func api_call, const std::string& expected_message)
 {
@@ -47,8 +57,10 @@ void test_start_run_returns_run_id()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
 
+	QaseConfig cfg = make_test_config();
+
 	// qase_start_run must call HttpClient.post to retrieve the run_id from Qase API
-	uint64_t run_id = api.qase_start_run(fake, "ET1", test_token);
+	uint64_t run_id = api.qase_start_run(fake, cfg);
 	assert(run_id == 123456);
 }
 
@@ -58,7 +70,9 @@ void test_start_run_handles_wrong_project()
 {
 	QaseApi api;
 	auto fake = make_fake_with_error("Project is not found.");
-	expect_qase_api_error(fake, [&]() { api.qase_start_run(fake, "ET1", test_token); }, "Project is not found.");
+	QaseConfig cfg = make_test_config();
+
+	expect_qase_api_error(fake, [&]() { api.qase_start_run(fake, cfg); }, "Project is not found.");
 }
 
 // when we're trying to call Qase API's bulk result method with the wrong project, there's no way to gracefully degrade, it should just throw
@@ -115,7 +129,9 @@ void test_start_run_calls_correct_url()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
 
-	api.qase_start_run(fake, "ET1", test_token);
+	QaseConfig cfg = make_test_config();
+
+	api.qase_start_run(fake, cfg);
 
 	assert(fake.called_url == "https://api.qase.io/v1/run/ET1");
 }
@@ -140,7 +156,9 @@ void test_start_run_sets_token_header()
 	FakeHttpClient fake;
 	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
 
-	api.qase_start_run(fake, "ET1", test_token);
+	QaseConfig cfg = make_test_config();
+
+	api.qase_start_run(fake, cfg);
 
 	expect_token_header_set(fake, test_token);
 }
@@ -206,10 +224,10 @@ struct FakeQaseApi : public IQaseApi {
 
 	uint64_t complete_run_id = 0;
 
-	uint64_t qase_start_run(HttpClient&, const std::string& project_code, const std::string& token) override {
+	uint64_t qase_start_run(HttpClient&, const QaseConfig& cfg) override {
 		calls.push_back("start");
-		start_project_code = project_code;
-		start_token = token;
+		start_project_code = cfg.project;
+		start_token = cfg.token;
 		return 42;
 	}
 
@@ -226,14 +244,6 @@ struct FakeQaseApi : public IQaseApi {
 		return true;
 	}
 };
-
-QaseConfig make_test_config() {
-	QaseConfig cfg;
-	cfg.project = "ET1";
-	cfg.token = test_token;
-	cfg.host = "api.qase.io";
-	return cfg;
-}
 
 // qase_submit_report must follow this flow:
 // 1. take all the results accumulated from qase_reporter_add_result calls

@@ -65,10 +65,10 @@ namespace qase {
 
 
 	// qase_start_run should call Qase API and return new test run
-	uint64_t QaseApi::qase_start_run(HttpClient& http, const std::string& project_code, const std::string& token) {
-		const std::string url = api_url + "run/" + project_code;
+	uint64_t QaseApi::qase_start_run(HttpClient& http, const QaseConfig& cfg) {
+		const std::string url = "https://" + cfg.host + "/v1/run/" + cfg.project;
 		const std::string payload = R"({ "title": "Unity Test Run", "include_all_cases": true })";
-		const auto headers = make_headers(token);
+		const auto headers = make_headers(cfg.token);
 
 		std::string response = http.post(url, payload, headers);
 		auto json = nlohmann::json::parse(response);
@@ -135,7 +135,7 @@ namespace qase {
 		const std::string payload = qase_serialize_results(results);
 
 		// step 2: start test run in Qase API with qase_start_run
-		uint64_t run_id = api.qase_start_run(http, project_code, token);
+		uint64_t run_id = api.qase_start_run(http, cfg);
 
 		// step 3: bulk submit all serialized results to Qase API with qase_submit_results
 		bool bulk_result = api.qase_submit_results(http, project_code, run_id, token, payload);
