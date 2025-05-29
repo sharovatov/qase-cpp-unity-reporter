@@ -145,6 +145,9 @@ namespace qase {
 
 	QaseConfig load_qase_config(const std::string& path) {
 		std::ifstream f(path);
+		if (!f.is_open()) {
+			throw std::runtime_error("Could not open config file: " + path);
+		}
 
 		nlohmann::json j;
 		f >> j;
