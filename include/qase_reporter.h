@@ -43,4 +43,11 @@ namespace qase {
 			const std::string& token
 		);
 
+	struct QaseConfig {
+		std::string token;
+		std::string host;
+		std::string project;
+	};
+
+	QaseConfig load_qase_config(const std::string& path);
 }

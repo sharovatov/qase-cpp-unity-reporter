@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cassert>
+#include <fstream> // maybe we need to include and use fstreams only when built to do so?
 #include "qase_reporter.h"
 
 using namespace qase;
@@ -272,7 +273,7 @@ void test_orchestrator_does_nothing_if_no_results() {
 // token, host and project code should be taken from the config file
 void test_load_qase_config_parses_fields_correctly()
 {
-	const std::string config_path = "test_data/qase_config.json";
+	const std::string config_path = "test_qase_config.json";
 
 	// write the temporary file
 	std::ofstream out(config_path);
@@ -280,7 +281,7 @@ void test_load_qase_config_parses_fields_correctly()
 		"testops": {
 			"api": {
 				"token": "MY_TEST_TOKEN",
-				"host": "qase.test"
+				"host": "api.qase.io"
 			},
 			"project": "ET-1"
 		}

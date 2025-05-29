@@ -1,5 +1,6 @@
 #include <nlohmann/json.hpp>
 #include "qase_reporter.h"
+#include <fstream> // maybe we should include it only when built with fs support?
 
 using json = nlohmann::json;
 
@@ -140,6 +141,19 @@ namespace qase {
 		// step 4: complete test run in Qase API with qase_complete_run
 		bool completed = api.qase_complete_run(http, project_code, run_id, token);
 
+	}
+
+	QaseConfig load_qase_config(const std::string& path) {
+		std::ifstream f(path);
+
+		nlohmann::json j;
+		f >> j;
+
+		QaseConfig cfg;
+		cfg.token = j["testops"]["api"]["token"].get<std::string>();
+		cfg.host = j["testops"]["api"]["host"].get<std::string>();
+		cfg.project = j["testops"]["project"].get<std::string>();
+		return cfg;
 	}
 
 }
