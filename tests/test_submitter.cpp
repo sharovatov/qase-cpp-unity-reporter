@@ -18,7 +18,7 @@ struct FakeHttpClient : public qase::HttpClient {
 	}
 };
 
-const std::string test_token = "FAKE_TOKEN_456";
+//const std::string test_token = "FAKE_TOKEN_456";
 const std::string empty_payload = "{ \"results\":[] }";
 
 	template<typename Func>
@@ -241,16 +241,19 @@ void test_orchestrator_uses_iqaseapi_flow() {
 	qase_reporter_reset();
 	qase_reporter_add_result("dummy", true);
 
-	const std::string expected_project_code = "ET1";
+	QaseConfig cfg;
+	cfg.project = "ET1";
+	cfg.token = test_token;
+	cfg.host = "api.qase.io";
 
-	qase_submit_report(api, client, expected_project_code, test_token);
+	qase_submit_report(api, client, cfg);
 
 	// make sure the flow is correct
 	assert((api.calls == std::vector<std::string>{"start", "submit", "complete"}));
 
 	// make sure qase_submit_report passes parameters correctly between api calls
-	assert(api.start_project_code == expected_project_code);
-	assert(api.start_token == test_token);
+	assert(api.start_project_code == cfg.project);
+	assert(api.start_token == cfg.token);
 	assert(api.submit_run_id == 42);
 	assert(!api.submit_payload.empty());
 	assert(api.complete_run_id == 42);
