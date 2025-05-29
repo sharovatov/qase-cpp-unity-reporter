@@ -45,7 +45,7 @@ namespace qase {
 	void qase_submit_report(
 			IQaseApi& api,
 			HttpClient& http,
-			QaseConfig& cfg
+			const QaseConfig& cfg
 		);
 
 	QaseConfig load_qase_config(const std::string& path);

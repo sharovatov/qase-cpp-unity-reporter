@@ -119,7 +119,7 @@ namespace qase {
 	void qase_submit_report(
 			IQaseApi& api,
 			HttpClient& http,
-			QaseConfig& cfg
+			const QaseConfig& cfg
 		) {
 
 		const auto& project_code = cfg.project;
