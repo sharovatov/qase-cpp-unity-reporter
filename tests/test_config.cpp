@@ -1,4 +1,4 @@
-Ginclude <iostream>
+#include <iostream>
 #include <cassert>
 #include <fstream> // maybe we need to include and use fstreams only when built to do so?
 #include "qase_reporter.h"
@@ -85,6 +85,34 @@ void test_load_qase_config_throws_on_missing_fields() {
 	}
 
 	assert(threw && "Expected exception due to missing required fields");
+
+	std::remove(config_path.c_str());
+}
+
+void test_load_qase_config_throws_on_empty_fields() {
+	const std::string config_path = "empty_fields_config.json";
+
+	std::ofstream out(config_path);
+	out << R"({
+		"testops": {
+			"api": {
+				"token": "",
+				"host": ""
+			},
+			"project": ""
+		}
+	})";
+	out.close();
+
+	bool threw = false;
+	try {
+		load_qase_config(config_path);
+	} catch (const std::runtime_error& e) {
+		std::string msg = e.what();
+		threw = msg.find("must not be empty") != std::string::npos;
+	}
+
+	assert(threw && "Expected exception due to empty config values");
 
 	std::remove(config_path.c_str());
 }
