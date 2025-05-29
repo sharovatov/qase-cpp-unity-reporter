@@ -18,7 +18,7 @@ struct FakeHttpClient : public qase::HttpClient {
 	}
 };
 
-//const std::string test_token = "FAKE_TOKEN_456";
+const std::string test_token = "FAKE_TOKEN_456";
 const std::string empty_payload = "{ \"results\":[] }";
 
 	template<typename Func>
