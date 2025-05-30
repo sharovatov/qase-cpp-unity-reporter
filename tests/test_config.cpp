@@ -144,3 +144,38 @@ void test_resolve_config_uses_file_if_nothing_else() {
 	std::remove(config_path.c_str());
 }
 
+void test_resolve_config_env_vars_override_file() {
+	const std::string config_path = "config_with_defaults.json";
+
+	std::ofstream out(config_path);
+	out << R"({
+        "testops": {
+            "api": {
+                "token": "from_file_token",
+                "host": "from_file_host"
+            },
+            "project": "from_file_project"
+        }
+    })";
+	out.close();
+
+	// envs should override the file
+	setenv("QASE_TOKEN", "from_env_token", 1);
+	setenv("QASE_HOST", "from_env_host", 1);
+	setenv("QASE_PROJECT", "from_env_project", 1);
+
+	ConfigResolutionInput input;
+	input.env_prefix = "QASE_";
+	input.file = config_path;
+
+	QaseConfig cfg = resolve_config(input);
+
+	assert(cfg.token == "from_env_token");
+	assert(cfg.host == "from_env_host");
+	assert(cfg.project == "from_env_project");
+
+	std::remove(config_path.c_str());
+	unsetenv("QASE_TOKEN");
+	unsetenv("QASE_HOST");
+	unsetenv("QASE_PROJECT");
+}

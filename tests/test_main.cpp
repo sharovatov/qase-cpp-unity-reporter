@@ -37,6 +37,7 @@ int main()
 	RUN_TEST(test_load_qase_config_throws_on_missing_fields);
 	RUN_TEST(test_load_qase_config_throws_on_empty_fields);
 	RUN_TEST(test_resolve_config_uses_file_if_nothing_else);
+	RUN_TEST(test_resolve_config_env_vars_override_file);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
