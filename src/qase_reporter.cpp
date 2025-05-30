@@ -149,6 +149,7 @@ namespace qase {
 
 	QaseConfig resolve_config(const ConfigResolutionInput& input) {
 
+		// if there's a predefined (usually hardcoded) QaseConfig obj, return it
 		if (input.preset.has_value()) {
 			return input.preset.value();
 		}
