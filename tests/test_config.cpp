@@ -117,29 +117,16 @@ void test_load_qase_config_throws_on_empty_fields() {
 	std::remove(config_path.c_str());
 }
 
-void test_load_qase_config_defaults() {
-	const std::string config_path = "default_values_config.json";
+void test_resolve_config_returns_defaults() {
+	QaseConfig cfg = resolve_config();
 
-	std::ofstream out(config_path);
-	out << R"({
-		"testops": {
-			"api": { "token": "abc" },
-			"project": "test_project_code"
-		}
-	})";
-	out.close();
-
-	QaseConfig cfg = load_qase_config(config_path);
-
+	assert(cfg.token.empty());
+	assert(cfg.project.empty());
 	assert(cfg.host == "api.qase.io");
-	assert(cfg.run_complete == true);
-	assert(cfg.token == "abc");
-	assert(cfg.project == "test_project_code");
-	// defaults that might matter later
-	// assert(cfg.debug == false);
-	// assert(cfg.fallback == "report");
-	// assert(cfg.environment == "local");
-	// assert(cfg.captureLogs == false);
-
-	std::remove(config_path.c_str());
+	assert(cfg.mode == "testops");
+/*	assert(cfg.fallback == false);
+	assert(cfg.environment.empty());
+	assert(cfg.rootSuite.empty());
+	assert(cfg.debug == false);
+	assert(*/
 }
