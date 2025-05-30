@@ -70,9 +70,9 @@ void test_load_qase_config_throws_on_missing_fields() {
 	const std::string config_path = "missing_fields_config.json";
 
 	std::ofstream out(config_path);
-	// json with only a token, but no host or a project
+	// neither token nor project are given!
 	out << R"({
-		"testops": {"api": {"token": "MY_TEST_TOKEN"}}
+		"testops": {"api": {}}
 	})";
 	out.close();
 
@@ -84,7 +84,7 @@ void test_load_qase_config_throws_on_missing_fields() {
 		threw = msg.find("Missing required field") != std::string::npos;
 	}
 
-	assert(threw && "Expected exception due to missing required fields");
+	assert(threw && "Expected exception due to missing required fields: token and project");
 
 	std::remove(config_path.c_str());
 }
