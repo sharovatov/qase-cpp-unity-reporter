@@ -197,6 +197,69 @@ namespace qase {
 			cfg.run_complete = testops["run"]["complete"].get<bool>();
 		}
 
+		if (j.contains("mode")) cfg.mode = j["mode"].get<std::string>();
+		if (j.contains("fallback")) cfg.fallback = j["fallback"].get<std::string>();
+		if (j.contains("environment")) cfg.environment = j["environment"].get<std::string>();
+		if (j.contains("rootSuite")) cfg.root_suite = j["rootSuite"].get<std::string>();
+
+		if (j.contains("debug") && j["debug"].is_boolean()) {
+			cfg.debug = j["debug"].get<bool>();
+		}
+
+		if (j.contains("captureLogs") && j["captureLogs"].is_boolean()) {
+			cfg.capture_logs = j["captureLogs"].get<bool>();
+		}
+
+		if (testops.contains("report") && testops["report"].contains("driver")) {
+			cfg.report_driver = testops["report"]["driver"].get<std::string>();
+		}
+
+		if (testops.contains("report") && testops["report"].contains("connection") &&
+				testops["report"]["connection"].contains("path")) {
+			cfg.report_connection_path = testops["report"]["connection"]["path"].get<std::string>();
+		}
+
+		if (testops.contains("report") && testops["report"].contains("connection") &&
+				testops["report"]["connection"].contains("format")) {
+			cfg.report_connection_path = testops["report"]["connection"]["format"].get<std::string>();
+		}
+
+		if (testops["api"].contains("enterprise")) {
+			cfg.enterprise = testops["api"]["enterprise"].get<bool>();
+		}
+
+		// todo: support this further down the logics
+		if (testops["api"].contains("defect")) {
+			cfg.defect = testops["api"]["defect"].get<bool>();
+		}
+
+		// todo: support passing run_id further down in the logics
+		if (testops.contains("run") && testops["run"].contains("id")) {
+			cfg.run_id = testops["run"]["id"].get<int>();
+		}
+
+		// todo: support passing run_title further down in the logics
+		// todo: support adding date and time so that the format is like:
+		// "Automated run <Current date and time>"
+		if (testops.contains("run") && testops["run"].contains("title")) {
+			cfg.run_title = testops["run"]["title"].get<std::string>();
+		}
+
+		// todo: support passing run_description further down in the logics
+		if (testops.contains("run") && testops["run"].contains("description")) {
+			cfg.run_description = testops["run"]["description"].get<std::string>();
+		}
+
+		// todo: support passing plan_id further down in the logics
+		if (testops.contains("plan") && testops["plan"].contains("id")) {
+			cfg.plan_id = testops["plan"]["id"].get<int>();
+		}
+
+		// todo: support passing batch_size further down in the logics
+		if (testops.contains("batch") && testops["batch"].contains("size")) {
+			cfg.batch_size = testops["batch"]["size "].get<int>();
+		}
+
 		return cfg;
 	}
 	#endif
