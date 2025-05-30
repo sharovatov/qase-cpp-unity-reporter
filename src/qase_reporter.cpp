@@ -147,6 +147,11 @@ namespace qase {
 
 	}
 
+	QaseConfig resolve_config() {
+		QaseConfig cfg;
+		return cfg;
+	}
+
 	// ========= READING CONFIG FROM A FILE IS NOT AVAILABLE ON ESP32 =======
 	#ifndef ESP_PLATFORM
 	QaseConfig load_qase_config(const std::string& path) {

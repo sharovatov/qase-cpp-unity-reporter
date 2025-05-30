@@ -123,9 +123,9 @@ void test_resolve_config_returns_defaults() {
 	assert(cfg.token.empty());
 	assert(cfg.project.empty());
 	assert(cfg.host == "api.qase.io");
-	assert(cfg.mode == "testops");
 /*	assert(cfg.fallback == false);
 	assert(cfg.environment.empty());
+	assert(cfg.mode == "testops");
 	assert(cfg.rootSuite.empty());
 	assert(cfg.debug == false);
 	assert(*/

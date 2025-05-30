@@ -49,6 +49,8 @@ namespace qase {
 			const QaseConfig& cfg
 		);
 
+	QaseConfig resolve_config();
+
 #ifndef ESP_PLATFORM
 	QaseConfig load_qase_config(const std::string& path);
 #endif
