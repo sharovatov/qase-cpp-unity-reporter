@@ -15,6 +15,31 @@ namespace qase {
 		std::string host = "api.qase.io";
 		std::string project;
 		bool run_complete = true;
+
+		std::string mode = "testops";
+		std::string fallback = "off";
+		std::string environment;
+		std::string root_suite;
+		bool debug = false;
+		bool capture_logs = false;
+		std::string report_driver = "local";
+		std::string report_connection_path;
+		std::string connection_format = "json";
+		bool enterprise = false;
+		
+		// todo: support passing run_id
+		int run_id;
+
+		// todo: support adding date and time to this so it's "Automated run <Current date and time>"
+		std::string run_title = "Automated run ????";
+
+		std::string run_description = "Unity automated run";
+		int plan_id;
+		int batch_size = 200;
+
+		// todo: support this
+		bool defect = false;
+
 	};
 
 	struct ConfigResolutionInput {
