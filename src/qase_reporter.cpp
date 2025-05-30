@@ -202,15 +202,43 @@ namespace qase {
 	#endif
 
 	QaseConfig resolve_config(const ConfigResolutionInput& input) {
+
+		// 1. tart with defaults (already set in QaseConfig struct)
 		QaseConfig cfg;
 
-		// if there is a file, use it
+		// 2. if there is a file, use its values to override
 		if (input.file.has_value()) {
 			try {
-				cfg = load_qase_config(input.file.value());
+				QaseConfig file_cfg = load_qase_config(input.file.value());
+				cfg.token = file_cfg.token;
+				cfg.project = file_cfg.project;
+				cfg.host = file_cfg.host;
 			} catch (const std::exception& e) {
 				throw std::runtime_error("Failed to load config from file: " + std::string(e.what()));
 			}
+		}
+
+		// 3. if there are envs, use the values to override
+		if (input.env_prefix.has_value()) {
+			std::string prefix = input.env_prefix.value();
+
+			const char* token = std::getenv((prefix + "TOKEN").c_str());
+			if (token) cfg.token = token;
+
+			const char* host = std::getenv((prefix + "HOST").c_str());
+			if (host) cfg.host = host;
+
+			const char* project = std::getenv((prefix + "PROJECT").c_str());
+			if (project) cfg.project = project;
+		}
+
+		// 4. if QaseConfig instance was passed, use it to override
+		if (input.preset.has_value()) {
+			const QaseConfig& p = input.preset.value();
+
+			if (!p.token.empty()) cfg.token = p.token;
+			if (!p.project.empty()) cfg.project = p.project;
+			if (!p.host.empty()) cfg.host = p.host;
 		}
 
 		return cfg;

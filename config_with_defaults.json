@@ -1,9 +1,0 @@
-{
-        "testops": {
-            "api": {
-                "token": "from_file_token",
-                "host": "from_file_host"
-            },
-            "project": "from_file_project"
-        }
-    }
