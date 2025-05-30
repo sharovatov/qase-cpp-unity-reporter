@@ -147,10 +147,17 @@ namespace qase {
 
 	}
 
-	QaseConfig resolve_config() {
-		QaseConfig cfg;
+	QaseConfig resolve_config(const ConfigResolutionInput& input) {
+
+		if (input.preset.has_value()) {
+			return input.preset.value();
+		}
+
+		QaseConfig cfg; // start with defaults
 		return cfg;
 	}
+
+	
 
 	// ========= READING CONFIG FROM A FILE IS NOT AVAILABLE ON ESP32 =======
 	#ifndef ESP_PLATFORM

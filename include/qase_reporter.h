@@ -17,7 +17,13 @@ namespace qase {
 		bool run_complete = true;
 	};
 
-	struct HttpClient {
+	struct ConfigResolutionInput {
+		std::optional<QaseConfig> preset;
+		std::optional<std::string> env_prefix;
+		std::optional<std::string> json_path;
+	};
+
+struct HttpClient {
 		virtual std::string post(const std::string& url, const std::string& body, const std::vector<std::string>& headers) = 0;
 
 		virtual ~HttpClient() = default;
@@ -49,7 +55,7 @@ namespace qase {
 			const QaseConfig& cfg
 		);
 
-	QaseConfig resolve_config();
+	QaseConfig resolve_config(const ConfigResolutionInput& input);
 
 #ifndef ESP_PLATFORM
 	QaseConfig load_qase_config(const std::string& path);
