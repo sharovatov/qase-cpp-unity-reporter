@@ -117,16 +117,18 @@ void test_load_qase_config_throws_on_empty_fields() {
 	std::remove(config_path.c_str());
 }
 
-void test_resolve_config_returns_defaults() {
-	QaseConfig cfg = resolve_config();
+void test_resolve_config_returns_preset_if_provided() {
+	QaseConfig preset;
+	preset.token = "from_preset_token";
+	preset.host = "from_preset_host";
+	preset.project = "from_preset_project";
 
-	assert(cfg.token.empty());
-	assert(cfg.project.empty());
-	assert(cfg.host == "api.qase.io");
-/*	assert(cfg.fallback == false);
-	assert(cfg.environment.empty());
-	assert(cfg.mode == "testops");
-	assert(cfg.rootSuite.empty());
-	assert(cfg.debug == false);
-	assert(*/
+	ConfigResolutionInput input;
+	input.preset = preset;
+
+	QaseConfig resolved = resolve_config(input);
+
+	assert(resolved.token == "from_preset_token");
+	assert(resolved.host == "from_preset_host");
+	assert(resolved.project == "from_preset_project");
 }
