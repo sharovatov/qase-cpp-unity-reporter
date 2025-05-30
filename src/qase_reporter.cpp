@@ -206,8 +206,10 @@ namespace qase {
 		// 1. tart with defaults (already set in QaseConfig struct)
 		QaseConfig cfg;
 
-		// 2. if there is a file, use its values to override
 		if (input.file.has_value()) {
+#ifndef ESP_PLATFORM
+			// 2. if there is a file, use its values to override
+			// NOTE file loading support doesn't work on ESP32
 			try {
 				QaseConfig file_cfg = load_qase_config(input.file.value());
 				cfg.token = file_cfg.token;
@@ -216,6 +218,9 @@ namespace qase {
 			} catch (const std::exception& e) {
 				throw std::runtime_error("Failed to load config from file: " + std::string(e.what()));
 			}
+#else
+			throw std::runtime_error("Config file loading not supported on ESP32");
+#endif
 		}
 
 		// 3. if there are envs, use the values to override
