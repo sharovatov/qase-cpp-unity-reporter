@@ -87,8 +87,6 @@ namespace qase {
 		throw std::runtime_error("qase_start_run unknown error");
 	}
 
-//	bool QaseApi::qase_submit_results(HttpClient& http, const std::string& project_code, uint64_t run_id, const std::string& token, const std::string& payload) {
-
 	bool QaseApi::qase_submit_results(HttpClient& http, const QaseConfig& cfg, uint64_t run_id, const std::string& payload) {
 
 		const std::string url = qase_api_base(cfg) + "result/" + cfg.project + "/" + std::to_string(run_id) + "/bulk";
@@ -128,9 +126,6 @@ namespace qase {
 			HttpClient& http,
 			const QaseConfig& cfg
 		) {
-
-		const auto& project_code = cfg.project;
-		const auto& token = cfg.token;
 
 		// step 0: take all the results accumulated from qase_reporter_add_result calls
 		const auto& results = qase_reporter_get_results();
