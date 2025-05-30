@@ -147,17 +147,6 @@ namespace qase {
 
 	}
 
-	QaseConfig resolve_config(const ConfigResolutionInput& input) {
-
-		// if there's a predefined (usually hardcoded) QaseConfig obj, return it
-		if (input.preset.has_value()) {
-			return input.preset.value();
-		}
-
-		QaseConfig cfg; // start with defaults
-		return cfg;
-	}
-
 	
 
 	// ========= READING CONFIG FROM A FILE IS NOT AVAILABLE ON ESP32 =======
@@ -211,6 +200,21 @@ namespace qase {
 		return cfg;
 	}
 	#endif
+
+	QaseConfig resolve_config(const ConfigResolutionInput& input) {
+		QaseConfig cfg;
+
+		// if there is a file, use it
+		if (input.file.has_value()) {
+			try {
+				cfg = load_qase_config(input.file.value());
+			} catch (const std::exception& e) {
+				throw std::runtime_error("Failed to load config from file: " + std::string(e.what()));
+			}
+		}
+
+		return cfg;
+	}
 
 
 }

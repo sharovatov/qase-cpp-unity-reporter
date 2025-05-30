@@ -36,7 +36,7 @@ int main()
 	RUN_TEST(test_load_qase_config_throws_on_invalid_json);
 	RUN_TEST(test_load_qase_config_throws_on_missing_fields);
 	RUN_TEST(test_load_qase_config_throws_on_empty_fields);
-	RUN_TEST(test_resolve_config_returns_preset_if_provided);
+	RUN_TEST(test_resolve_config_uses_file_if_nothing_else);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 

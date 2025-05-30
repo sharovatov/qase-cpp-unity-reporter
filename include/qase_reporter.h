@@ -20,7 +20,7 @@ namespace qase {
 	struct ConfigResolutionInput {
 		std::optional<QaseConfig> preset;
 		std::optional<std::string> env_prefix;
-		std::optional<std::string> json_path;
+		std::optional<std::string> file;
 	};
 
 struct HttpClient {

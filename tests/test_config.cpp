@@ -117,18 +117,30 @@ void test_load_qase_config_throws_on_empty_fields() {
 	std::remove(config_path.c_str());
 }
 
-void test_resolve_config_returns_preset_if_provided() {
-	QaseConfig preset;
-	preset.token = "from_preset_token";
-	preset.host = "from_preset_host";
-	preset.project = "from_preset_project";
+void test_resolve_config_uses_file_if_nothing_else() {
+	const std::string config_path = "file_only_config.json";
+
+	std::ofstream out(config_path);
+	out << R"({
+		"testops": {
+			"api": {
+				"token": "token_from_file",
+				"host": "host_from_file"
+			},
+			"project": "project_from_file"
+		}
+	})";
+	out.close();
 
 	ConfigResolutionInput input;
-	input.preset = preset;
+	input.file = config_path;
 
-	QaseConfig resolved = resolve_config(input);
+	QaseConfig cfg = resolve_config(input);
 
-	assert(resolved.token == "from_preset_token");
-	assert(resolved.host == "from_preset_host");
-	assert(resolved.project == "from_preset_project");
+	assert(cfg.token == "token_from_file");
+	assert(cfg.host == "host_from_file");
+	assert(cfg.project == "project_from_file");
+
+	std::remove(config_path.c_str());
 }
+
