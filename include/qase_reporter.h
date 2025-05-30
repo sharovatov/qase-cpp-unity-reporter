@@ -12,8 +12,9 @@ namespace qase {
 
 	struct QaseConfig {
 		std::string token;
-		std::string host;
+		std::string host = "api.qase.io";
 		std::string project;
+		bool run_complete = true;
 	};
 
 	struct HttpClient {

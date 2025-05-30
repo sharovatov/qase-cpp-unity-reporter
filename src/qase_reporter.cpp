@@ -162,21 +162,37 @@ namespace qase {
 			throw std::runtime_error("Failed to parse JSON: " + std::string(e.what()));
 		}
 
-		// testops.project, testops.api.token and testops.api.host must be readable
-		if (!j.contains("testops") || !j["testops"].contains("api") || 
-				!j["testops"]["api"].contains("token") ||
-				!j["testops"]["api"].contains("host") ||
-				!j["testops"].contains("project")) {
-			throw std::runtime_error("Missing required field(s) in config");
+		if (!j.contains("testops")) {
+			throw std::runtime_error("Missing required field: testops");
+		}
+		auto& testops = j["testops"];
+
+		if (!testops.contains("api") || !testops["api"].contains("token")) {
+			throw std::runtime_error("Missing required field: testops.api.token");
+		}
+		std::string token = testops["api"]["token"].get<std::string>();
+		if (token.empty()) {
+			throw std::runtime_error("Config field 'token' must not be empty");
 		}
 
-		QaseConfig cfg;
-		cfg.token = j["testops"]["api"]["token"].get<std::string>();
-		cfg.host = j["testops"]["api"]["host"].get<std::string>();
-		cfg.project = j["testops"]["project"].get<std::string>();
+		if (!testops.contains("project")) {
+			throw std::runtime_error("Missing required field: testops.project");
+		}
+		std::string project = testops["project"].get<std::string>();
+		if (project.empty()) {
+			throw std::runtime_error("Config field 'project' must not be empty");
+		}
 
-		if (cfg.token.empty() || cfg.host.empty() || cfg.project.empty()) {
-			throw std::runtime_error("Config fields must not be empty");
+		// config with defaults but overriden where applicable
+		QaseConfig cfg;
+		cfg.token = token;
+		cfg.project = project;
+
+		if (testops["api"].contains("host")) {
+			cfg.host = testops["api"]["host"].get<std::string>();
+		}
+		if (testops.contains("run") && testops["run"].contains("complete")) {
+			cfg.run_complete = testops["run"]["complete"].get<bool>();
 		}
 
 		return cfg;
