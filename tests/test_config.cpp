@@ -217,3 +217,22 @@ void test_resolve_config_preset_overrides_env_and_file() {
 
 	std::remove(config_path.c_str());
 }
+
+void test_merge_config_overrides_strings() {
+	QaseConfig base;
+	base.token = "base_token";
+	base.project = "base_project";
+	base.host = "base_host";
+
+	QaseConfig overrides;
+	overrides.token = "override_token";
+	overrides.host = "override_host";
+	// project left empty on purpose
+
+	merge_config(base, overrides);
+
+	assert(base.token == "override_token");
+	assert(base.host == "override_host");
+	assert(base.project == "base_project"); // should remain unchanged
+}
+
