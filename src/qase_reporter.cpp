@@ -269,47 +269,42 @@ namespace qase {
 
 	QaseConfig resolve_config(const ConfigResolutionInput& input) {
 
-		// 1. tart with defaults (already set in QaseConfig struct)
+		// 1. start with defaults (already set in QaseConfig struct in .h file)
 		QaseConfig cfg;
 
+		#ifndef ESP_PLATFORM
 		if (input.file.has_value()) {
-#ifndef ESP_PLATFORM
 			// 2. if there is a file, use its values to override
 			// NOTE file loading support doesn't work on ESP32
 			try {
 				QaseConfig file_cfg = load_qase_config(input.file.value());
-				cfg.token = file_cfg.token;
-				cfg.project = file_cfg.project;
-				cfg.host = file_cfg.host;
+				cfg = merge_config(cfg, file_cfg);
 			} catch (const std::exception& e) {
 				throw std::runtime_error("Failed to load config from file: " + std::string(e.what()));
 			}
-#else
-			throw std::runtime_error("Config file loading not supported on ESP32");
-#endif
 		}
+		#endif
 
 		// 3. if there are envs, use the values to override
 		if (input.env_prefix.has_value()) {
+			QaseConfig env_cfg;
 			std::string prefix = input.env_prefix.value();
 
 			const char* token = std::getenv((prefix + "TOKEN").c_str());
-			if (token) cfg.token = token;
+			if (token) env_cfg.token = token;
 
 			const char* host = std::getenv((prefix + "HOST").c_str());
-			if (host) cfg.host = host;
+			if (host) env_cfg.host = host;
 
 			const char* project = std::getenv((prefix + "PROJECT").c_str());
-			if (project) cfg.project = project;
+			if (project) env_cfg.project = project;
+
+			cfg = merge_config(cfg, env_cfg);
 		}
 
 		// 4. if QaseConfig instance was passed, use it to override
 		if (input.preset.has_value()) {
-			const QaseConfig& p = input.preset.value();
-
-			if (!p.token.empty()) cfg.token = p.token;
-			if (!p.project.empty()) cfg.project = p.project;
-			if (!p.host.empty()) cfg.host = p.host;
+			cfg = merge_config(cfg, input.preset.value());
 		}
 
 		return cfg;
