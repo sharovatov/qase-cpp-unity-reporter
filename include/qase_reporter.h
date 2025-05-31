@@ -88,4 +88,6 @@ struct HttpClient {
 
 	QaseConfig merge_config(const QaseConfig& base, const QaseConfig& incoming);
 
+	QaseConfig load_qase_config_from_env(const std::string& prefix);
+
 }

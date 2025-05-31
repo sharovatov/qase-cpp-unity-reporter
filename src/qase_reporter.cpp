@@ -267,6 +267,22 @@ namespace qase {
 	}
 	#endif
 
+	// todo: implement passing more values from env?
+	QaseConfig load_qase_config_from_env(const std::string& prefix) {
+		QaseConfig cfg;
+
+		const char* token = std::getenv((prefix + "TOKEN").c_str());
+		if (token) cfg.token = token;
+
+		const char* host = std::getenv((prefix + "HOST").c_str());
+		if (host) cfg.host = host;
+
+		const char* project = std::getenv((prefix + "PROJECT").c_str());
+		if (project) cfg.project = project;
+
+		return cfg;
+	}
+
 	QaseConfig resolve_config(const ConfigResolutionInput& input) {
 
 		// 1. start with defaults (already set in QaseConfig struct in .h file)
@@ -287,18 +303,7 @@ namespace qase {
 
 		// 3. if there are envs, use the values to override
 		if (input.env_prefix.has_value()) {
-			QaseConfig env_cfg;
-			std::string prefix = input.env_prefix.value();
-
-			const char* token = std::getenv((prefix + "TOKEN").c_str());
-			if (token) env_cfg.token = token;
-
-			const char* host = std::getenv((prefix + "HOST").c_str());
-			if (host) env_cfg.host = host;
-
-			const char* project = std::getenv((prefix + "PROJECT").c_str());
-			if (project) env_cfg.project = project;
-
+			QaseConfig env_cfg = load_qase_config_from_env(input.env_prefix.value());
 			cfg = merge_config(cfg, env_cfg);
 		}
 
