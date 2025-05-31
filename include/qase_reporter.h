@@ -83,7 +83,7 @@ struct HttpClient {
 	QaseConfig resolve_config(const ConfigResolutionInput& input);
 
 #ifndef ESP_PLATFORM
-	QaseConfig load_qase_config(const std::string& path);
+	QaseConfig load_qase_config_from_file(const std::string& path);
 #endif
 
 	QaseConfig merge_config(const QaseConfig& base, const QaseConfig& incoming);

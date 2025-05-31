@@ -23,7 +23,7 @@ void test_load_qase_config_parses_fields_correctly()
 	})";
 	out.close();
 
-	QaseConfig cfg = load_qase_config(config_path);
+	QaseConfig cfg = load_qase_config_from_file(config_path);
 
 	assert(cfg.token == "MY_TEST_TOKEN");
 	assert(cfg.host == "api.qase.io");
@@ -38,12 +38,12 @@ void test_load_qase_config_throws_if_file_missing() {
 
 	bool threw = false;
 	try {
-		load_qase_config(config_path);
+		load_qase_config_from_file(config_path);
 	} catch (const std::runtime_error& e) {
 		threw = std::string(e.what()).find("Could not open config file") != std::string::npos;
 	}
 
-	assert(threw && "Expected load_qase_config to throw if file does not exist");
+	assert(threw && "Expected load_qase_config_from_file to throw if file does not exist");
 }
 
 void test_load_qase_config_throws_on_invalid_json() {
@@ -56,12 +56,12 @@ void test_load_qase_config_throws_on_invalid_json() {
 
 	bool threw = false;
 	try {
-		load_qase_config(config_path);
+		load_qase_config_from_file(config_path);
 	} catch (const std::runtime_error& e) {
 		threw = std::string(e.what()).find("Failed to parse JSON") != std::string::npos;
 	}
 
-	assert(threw && "Expected load_qase_config to throw on invalid JSON");
+	assert(threw && "Expected load_qase_config_from_file to throw on invalid JSON");
 
 	std::remove(config_path.c_str());
 }
@@ -78,7 +78,7 @@ void test_load_qase_config_throws_on_missing_fields() {
 
 	bool threw = false;
 	try {
-		load_qase_config(config_path);
+		load_qase_config_from_file(config_path);
 	} catch (const std::runtime_error& e) {
 		std::string msg = e.what();
 		threw = msg.find("Missing required field") != std::string::npos;
@@ -106,7 +106,7 @@ void test_load_qase_config_throws_on_empty_fields() {
 
 	bool threw = false;
 	try {
-		load_qase_config(config_path);
+		load_qase_config_from_file(config_path);
 	} catch (const std::runtime_error& e) {
 		std::string msg = e.what();
 		threw = msg.find("must not be empty") != std::string::npos;

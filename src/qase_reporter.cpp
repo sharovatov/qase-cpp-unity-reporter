@@ -151,7 +151,7 @@ namespace qase {
 
 	// ========= READING CONFIG FROM A FILE IS NOT AVAILABLE ON ESP32 =======
 	#ifndef ESP_PLATFORM
-	QaseConfig load_qase_config(const std::string& path) {
+	QaseConfig load_qase_config_from_file(const std::string& path) {
 		std::ifstream f(path);
 		if (!f.is_open()) {
 			throw std::runtime_error("Could not open config file: " + path);
@@ -293,7 +293,7 @@ namespace qase {
 			// 2. if there is a file, use its values to override
 			// NOTE file loading support doesn't work on ESP32
 			try {
-				QaseConfig file_cfg = load_qase_config(input.file.value());
+				QaseConfig file_cfg = load_qase_config_from_file(input.file.value());
 				cfg = merge_config(cfg, file_cfg);
 			} catch (const std::exception& e) {
 				throw std::runtime_error("Failed to load config from file: " + std::string(e.what()));
