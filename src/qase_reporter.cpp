@@ -84,7 +84,7 @@ namespace qase {
 			return json["result"]["id"].get<uint64_t>();
 		}
 
-		throw std::runtime_error("qase_start_run unknown error");
+		throw std::runtime_error("Qase API response missing result.id field");
 	}
 
 	bool QaseApi::qase_submit_results(HttpClient& http, const QaseConfig& cfg, uint64_t run_id, const std::string& payload) {
@@ -172,7 +172,9 @@ namespace qase {
 		if (!testops.contains("api") || !testops["api"].contains("token")) {
 			throw std::runtime_error("Missing required field: testops.api.token");
 		}
-		std::string token = testops["api"]["token"].get<std::string>();
+
+		const auto& tapi = testops["api"];
+		std::string token = tapi["token"].get<std::string>();
 		if (token.empty()) {
 			throw std::runtime_error("Config field 'token' must not be empty");
 		}
@@ -190,10 +192,11 @@ namespace qase {
 		cfg.token = token;
 		cfg.project = project;
 
-		if (testops["api"].contains("host")) {
-			cfg.host = testops["api"]["host"].get<std::string>();
+		if (tapi.contains("host")) {
+			cfg.host = tapi["host"].get<std::string>();
 		}
-		if (testops.contains("run") && testops["run"].contains("complete")) {
+		if (testops.contains("run") && testops["run"].contains("complete") &&
+				testops["run"]["complete"].is_boolean()) {
 			cfg.run_complete = testops["run"]["complete"].get<bool>();
 		}
 
@@ -221,20 +224,20 @@ namespace qase {
 
 		if (testops.contains("report") && testops["report"].contains("connection") &&
 				testops["report"]["connection"].contains("format")) {
-			cfg.report_connection_path = testops["report"]["connection"]["format"].get<std::string>();
+			cfg.connection_format = testops["report"]["connection"]["format"].get<std::string>();
 		}
 
-		if (testops["api"].contains("enterprise")) {
-			cfg.enterprise = testops["api"]["enterprise"].get<bool>();
+		if (tapi.contains("enterprise") && tapi["enterprise"].is_boolean()) {
+			cfg.enterprise = tapi["enterprise"].get<bool>();
 		}
 
 		// todo: support this further down the logics
-		if (testops["api"].contains("defect")) {
-			cfg.defect = testops["api"]["defect"].get<bool>();
+		if (testops.contains("defect") && testops["defect"].is_boolean()) {
+			cfg.defect = testops["defect"].get<bool>();
 		}
 
 		// todo: support passing run_id further down in the logics
-		if (testops.contains("run") && testops["run"].contains("id")) {
+		if (testops.contains("run") && testops["run"].contains("id") && testops["run"]["id"].is_number_integer()) {
 			cfg.run_id = testops["run"]["id"].get<int>();
 		}
 
@@ -257,7 +260,7 @@ namespace qase {
 
 		// todo: support passing batch_size further down in the logics
 		if (testops.contains("batch") && testops["batch"].contains("size")) {
-			cfg.batch_size = testops["batch"]["size "].get<int>();
+			cfg.batch_size = testops["batch"]["size"].get<int>();
 		}
 
 		return cfg;
