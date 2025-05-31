@@ -241,4 +241,18 @@ void test_merge_config_overrides_strings() {
 	assert(base.project == "base_project");
 }
 
+void test_load_qase_config_from_env_reads_expected_fields() {
+	setenv("QASE_TOKEN", "token_from_env", 1);
+	setenv("QASE_HOST", "host_from_env", 1);
+	setenv("QASE_PROJECT", "project_from_env", 1);
 
+	QaseConfig cfg = load_qase_config_from_env("QASE_");
+
+	assert(cfg.token == "token_from_env");
+	assert(cfg.host == "host_from_env");
+	assert(cfg.project == "project_from_env");
+
+	unsetenv("QASE_TOKEN");
+	unsetenv("QASE_HOST");
+	unsetenv("QASE_PROJECT");
+}

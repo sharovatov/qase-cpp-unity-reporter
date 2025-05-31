@@ -40,6 +40,7 @@ int main()
 	RUN_TEST(test_resolve_config_env_vars_override_file);
 	RUN_TEST(test_resolve_config_preset_overrides_env_and_file);
 	RUN_TEST(test_merge_config_overrides_strings);
+	RUN_TEST(test_load_qase_config_from_env_reads_expected_fields);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
