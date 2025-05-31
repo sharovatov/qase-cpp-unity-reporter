@@ -224,15 +224,21 @@ void test_merge_config_overrides_strings() {
 	base.project = "base_project";
 	base.host = "base_host";
 
-	QaseConfig overrides;
-	overrides.token = "override_token";
-	overrides.host = "override_host";
+	QaseConfig incoming;
+	incoming.token = "override_token";
+	incoming.host = "override_host";
 	// project left empty on purpose
 
-	merge_config(base, overrides);
+	QaseConfig merged = merge_config(base, incoming);
 
-	assert(base.token == "override_token");
-	assert(base.host == "override_host");
-	assert(base.project == "base_project"); // should remain unchanged
+	assert(merged.token == "override_token");   // overridden
+	assert(merged.host == "override_host");     // overridden
+	assert(merged.project == "base_project");   // unchanged
+
+	// base must remain untouched
+	assert(base.token == "base_token");
+	assert(base.host == "base_host");
+	assert(base.project == "base_project");
 }
+
 

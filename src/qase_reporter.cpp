@@ -315,5 +315,35 @@ namespace qase {
 		return cfg;
 	}
 
+	QaseConfig merge_config(const QaseConfig& base, const QaseConfig& incoming) {
+		QaseConfig result = base;
+
+		if (!incoming.token.empty()) result.token = incoming.token;
+		if (!incoming.project.empty()) result.project = incoming.project;
+		if (!incoming.host.empty()) result.host = incoming.host;
+
+		if (!incoming.mode.empty()) result.mode = incoming.mode;
+		if (!incoming.fallback.empty()) result.fallback = incoming.fallback;
+		if (!incoming.environment.empty()) result.environment = incoming.environment;
+		if (!incoming.root_suite.empty()) result.root_suite = incoming.root_suite;
+
+		if (incoming.debug) result.debug = true;
+		if (incoming.capture_logs) result.capture_logs = true;
+		if (!incoming.report_driver.empty()) result.report_driver = incoming.report_driver;
+		if (!incoming.report_connection_path.empty()) result.report_connection_path = incoming.report_connection_path;
+		if (!incoming.connection_format.empty()) result.connection_format = incoming.connection_format;
+
+		if (incoming.enterprise) result.enterprise = true;
+		if (incoming.defect) result.defect = true;
+
+		if (incoming.run_id > 0) result.run_id = incoming.run_id;
+		if (!incoming.run_title.empty()) result.run_title = incoming.run_title;
+		if (!incoming.run_description.empty()) result.run_description = incoming.run_description;
+		if (incoming.plan_id > 0) result.plan_id = incoming.plan_id;
+		if (incoming.batch_size > 0) result.batch_size = incoming.batch_size;
+
+		return result;
+	}
+
 
 }

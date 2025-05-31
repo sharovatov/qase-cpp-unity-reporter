@@ -86,4 +86,6 @@ struct HttpClient {
 	QaseConfig load_qase_config(const std::string& path);
 #endif
 
+	QaseConfig merge_config(const QaseConfig& base, const QaseConfig& incoming);
+
 }
