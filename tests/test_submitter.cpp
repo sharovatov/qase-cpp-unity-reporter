@@ -302,4 +302,24 @@ void test_orchestrator_does_nothing_if_no_results() {
 	assert(api.calls.empty() && "Expected no API calls if no results are present");
 }
 
+// if run_id is passed from the config, we mustn't call qase_start_run
+// and just pass the provided run_id to qase_submit_results
+void test_orchestrator_skips_start_run_if_run_id_provided() {
+	FakeQaseApi api;
+	FakeHttpClient http;
 
+	qase_reporter_reset();
+	qase_reporter_add_result("dummy", true);
+
+	QaseConfig cfg = make_test_config();
+	cfg.run_id = 99; // user-provided run ID
+
+	qase_submit_report(api, http, cfg);
+
+	// check the flow: no "start", only "submit" and "complete"
+	assert((api.calls == std::vector<std::string>{"submit", "complete"}));
+
+	// ensure the given run_id was used
+	assert(api.submit_run_id == 99);
+	assert(api.complete_run_id == 99);
+}
