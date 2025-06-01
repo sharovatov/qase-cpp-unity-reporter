@@ -42,6 +42,7 @@ int main()
 	RUN_TEST(test_merge_config_overrides_strings);
 	RUN_TEST(test_load_qase_config_from_env_reads_expected_fields);
 	RUN_TEST(test_orchestrator_skips_start_run_if_run_id_provided);
+	RUN_TEST(test_start_run_uses_run_title_if_provided);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 

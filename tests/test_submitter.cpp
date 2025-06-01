@@ -326,4 +326,19 @@ void test_orchestrator_skips_start_run_if_run_id_provided() {
 	assert(api.complete_run_id == 99);
 }
 
+void test_start_run_uses_run_title_if_provided() {
+	QaseApi api;
+	FakeHttpClient fake;
+	fake.canned_response = R"({ "status": true, "result": { "id": 123 } })";
 
+	QaseConfig cfg = make_test_config();
+	cfg.run_title = "Custom Test Run 12345";
+
+	api.qase_start_run(fake, cfg);
+
+	// the payload must include our passed custom run title
+	auto json_payload = nlohmann::json::parse(fake.called_payload);
+
+	assert(json_payload.contains("title") && "Expected payload to contain 'title'");
+	assert(json_payload["title"] == "Custom Test Run 12345");
+}
