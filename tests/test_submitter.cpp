@@ -260,7 +260,7 @@ struct FakeQaseApi : public IQaseApi {
 
 // qase_submit_report must follow this flow:
 // 1. take all the results accumulated from qase_reporter_add_result calls
-// 2. start test run in Qase API with qase_start_run
+// 2. if no run_id is set, start new test run in Qase API with qase_start_run
 // 3. bulk submit all serialized results to Qase API with qase_submit_results
 // 4. complete test run in Qase API with qase_complete_run
 //
@@ -273,13 +273,14 @@ void test_orchestrator_uses_iqaseapi_flow() {
 	qase_reporter_add_result("dummy", true);
 
 	QaseConfig cfg = make_test_config();
+	cfg.run_id = 0; // explicitly no run_id
 
 	qase_submit_report(api, http, cfg);
 
-	// make sure the flow is correct
+	// expected call sequence
 	assert((api.calls == std::vector<std::string>{"start", "submit", "complete"}));
 
-	// make sure qase_submit_report passes parameters correctly between api calls
+	// verify arguments passed correctly
 	assert(api.start_project_code == cfg.project);
 	assert(api.start_token == cfg.token);
 	assert(api.submit_run_id == 42);
@@ -312,14 +313,17 @@ void test_orchestrator_skips_start_run_if_run_id_provided() {
 	qase_reporter_add_result("dummy", true);
 
 	QaseConfig cfg = make_test_config();
-	cfg.run_id = 99; // user-provided run ID
+	cfg.run_id = 99; // simulate a pre-existing run
 
 	qase_submit_report(api, http, cfg);
 
-	// check the flow: no "start", only "submit" and "complete"
+	// start must be skipped
 	assert((api.calls == std::vector<std::string>{"submit", "complete"}));
 
-	// ensure the given run_id was used
+	// verify passed run_id is used directly
 	assert(api.submit_run_id == 99);
+	assert(!api.submit_payload.empty());
 	assert(api.complete_run_id == 99);
 }
+
+

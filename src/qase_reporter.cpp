@@ -136,8 +136,13 @@ namespace qase {
 		// step 1: take all serialised results accumulated from qase_reporter_add_result calls
 		const std::string payload = qase_serialize_results(results);
 
-		// step 2: start test run in Qase API with qase_start_run
-		uint64_t run_id = api.qase_start_run(http, cfg);
+		// step 2: if run_id is sent from the config, use it
+		// if no run_id is sent, start new test run in Qase API with qase_start_run 
+		// and get the run_id of this new run
+		uint64_t run_id = cfg.run_id;
+		if (run_id == 0) {
+			run_id = api.qase_start_run(http, cfg);
+		}
 
 		// step 3: bulk submit all serialized results to Qase API with qase_submit_results
 		bool bulk_result = api.qase_submit_results(http, cfg, run_id, payload);
