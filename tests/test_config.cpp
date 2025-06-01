@@ -18,7 +18,10 @@ void test_load_qase_config_parses_fields_correctly()
 				"token": "MY_TEST_TOKEN",
 				"host": "api.qase.io"
 			},
-			"project": "ET-1"
+			"project": "ET-1",
+			"run": {
+				"id": 4242
+			}
 		}
 	})";
 	out.close();
@@ -28,6 +31,7 @@ void test_load_qase_config_parses_fields_correctly()
 	assert(cfg.token == "MY_TEST_TOKEN");
 	assert(cfg.host == "api.qase.io");
 	assert(cfg.project == "ET-1");
+	assert(cfg.run_id == 4242);
 
 	// remove the temp file
 	std::remove(config_path.c_str());
