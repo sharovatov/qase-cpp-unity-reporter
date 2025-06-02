@@ -73,6 +73,8 @@ namespace qase {
 		const std::string url = qase_api_base(cfg) + "run/" + cfg.project;
 		nlohmann::json payload;
 		payload["title"] = cfg.run_title;
+
+		// todo: support passing from the config
 		payload["include_all_cases"] = true;
 
 		const auto headers = make_headers(cfg.token);
@@ -249,9 +251,6 @@ namespace qase {
 			cfg.run_id = testops["run"]["id"].get<int>();
 		}
 
-		// todo: support passing run_title further down in the logics
-		// todo: support adding date and time so that the format is like:
-		// "Automated run <Current date and time>"
 		if (testops.contains("run") && testops["run"].contains("title")) {
 			cfg.run_title = testops["run"]["title"].get<std::string>();
 		}
