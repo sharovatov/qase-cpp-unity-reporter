@@ -29,7 +29,6 @@ namespace qase {
 
 		int run_id;
 
-		// todo: support adding date and time to this so it's "Automated run <Current date and time>"
 		std::string run_title;
 		QaseConfig() {
 			std::time_t now = std::time(nullptr);
