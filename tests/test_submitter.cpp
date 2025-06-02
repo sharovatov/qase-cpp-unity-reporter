@@ -342,3 +342,19 @@ void test_start_run_uses_run_title_if_provided() {
 	assert(json_payload.contains("title") && "Expected payload to contain 'title'");
 	assert(json_payload["title"] == "Custom Test Run 12345");
 }
+
+void test_start_run_sets_description_if_present() {
+	QaseApi api;
+	FakeHttpClient fake;
+	fake.canned_response = R"({ "status": true, "result": { "id": 123456 } })";
+
+	QaseConfig cfg = make_test_config();
+	cfg.run_description = "Run triggered from CI pipeline";
+
+	api.qase_start_run(fake, cfg);
+
+	// make sure description is in the payload
+	auto json = nlohmann::json::parse(fake.called_payload);
+
+	assert(json["description"] == cfg.run_description);
+}
