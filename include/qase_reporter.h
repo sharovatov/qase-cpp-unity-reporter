@@ -26,8 +26,7 @@ namespace qase {
 		std::string report_connection_path;
 		std::string connection_format = "json";
 		bool enterprise = false;
-		
-		// todo: support passing run_id
+
 		int run_id;
 
 		// todo: support adding date and time to this so it's "Automated run <Current date and time>"
