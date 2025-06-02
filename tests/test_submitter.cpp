@@ -358,3 +358,20 @@ void test_start_run_sets_description_if_present() {
 
 	assert(json["description"] == cfg.run_description);
 }
+
+// if the config file says "don't complete the run", we obey
+void test_orchestrator_skips_complete_run_if_config_false() {
+	FakeQaseApi api;
+	FakeHttpClient http;
+
+	qase_reporter_reset();
+	qase_reporter_add_result("dummy", true);
+
+	QaseConfig cfg = make_test_config();
+	cfg.run_complete = false;
+
+	qase_submit_report(api, http, cfg);
+
+	// verify that only "start" and "submit" were called
+	assert((api.calls == std::vector<std::string>{"start", "submit"}));
+}
