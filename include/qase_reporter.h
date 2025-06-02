@@ -30,7 +30,17 @@ namespace qase {
 		int run_id;
 
 		// todo: support adding date and time to this so it's "Automated run <Current date and time>"
-		std::string run_title = "Automated run ????";
+		std::string run_title;
+		QaseConfig() {
+			std::time_t now = std::time(nullptr);
+			std::tm* tm_now = std::localtime(&now);
+
+			char time_part[32];
+			std::strftime(time_part, sizeof(time_part), "%Y-%m-%d %H:%M", tm_now);
+
+			run_title = "Automated run ";
+			run_title += time_part;
+		}
 
 		std::string run_description = "Unity automated run";
 		int plan_id;

@@ -260,3 +260,23 @@ void test_load_qase_config_from_env_reads_expected_fields() {
 	unsetenv("QASE_HOST");
 	unsetenv("QASE_PROJECT");
 }
+
+// extremely stupid test for time but here it is anyway lol
+void test_default_run_title_contains_date_and_time()
+{
+	QaseConfig cfg;
+
+	const std::string prefix = "Automated run ";
+
+	assert(cfg.run_title.rfind(prefix, 0) == 0 && "Expected run_title to start with 'Automated run '");
+
+	std::string datetime = cfg.run_title.substr(prefix.length());
+
+	// format: "YYYY-MM-DD HH:MM"
+	assert(datetime.length() == 16 && "Expected date/time to be 16 characters long");
+
+	// check digit positions
+	for (size_t i : {0,1,2,3,5,6,8,9,11,12,14,15}) {
+		assert(isdigit(datetime[i]) && "Expected digit in date/time format");
+	}
+}
