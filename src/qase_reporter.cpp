@@ -77,6 +77,10 @@ namespace qase {
 		// todo: support passing from the config
 		payload["include_all_cases"] = true;
 
+		if (!cfg.run_description.empty()) {
+			payload["description"] = cfg.run_description;
+		}
+
 		const auto headers = make_headers(cfg.token);
 
 		std::string response = http.post(url, payload.dump(), headers);
