@@ -3,6 +3,9 @@
 #include <fstream>
 #include "qase_reporter.h"
 
+// TODO: since our resolve_config is tested for working with files well here,
+// we can take all our tests which rely on file i/o and move to using QaseConfig
+
 using namespace qase;
 
 // token, host and project code should be taken from the config file
@@ -279,4 +282,29 @@ void test_default_run_title_contains_date_and_time()
 	for (size_t i : {0,1,2,3,5,6,8,9,11,12,14,15}) {
 		assert(isdigit(datetime[i]) && "Expected digit in date/time format");
 	}
+}
+
+void test_load_qase_config_parses_run_complete() {
+	const std::string config_path = "config_with_complete_flag.json";
+
+	std::ofstream out(config_path);
+	out << R"({
+		"testops": {
+			"api": {
+				"token": "token_value",
+				"host": "host_value"
+			},
+			"project": "project_value",
+			"run": {
+				"complete": false
+			}
+		}
+	})";
+	out.close();
+
+	QaseConfig cfg = load_qase_config_from_file(config_path);
+
+	assert(cfg.run_complete == false && "Expected run_complete to be false");
+
+	std::remove(config_path.c_str());
 }

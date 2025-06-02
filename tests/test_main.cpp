@@ -45,6 +45,7 @@ int main()
 	RUN_TEST(test_start_run_uses_run_title_if_provided);
 	RUN_TEST(test_default_run_title_contains_date_and_time);
 	RUN_TEST(test_start_run_sets_description_if_present);
+	RUN_TEST(test_load_qase_config_parses_run_complete);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
