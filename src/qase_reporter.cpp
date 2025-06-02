@@ -157,7 +157,10 @@ namespace qase {
 		bool bulk_result = api.qase_submit_results(http, cfg, run_id, payload);
 
 		// step 4: complete test run in Qase API with qase_complete_run
-		bool completed = api.qase_complete_run(http, cfg, run_id);
+		// but do it only if the config doesn't prohibit this
+		if (cfg.run_complete) {
+			api.qase_complete_run(http, cfg, run_id);
+		}
 
 	}
 
@@ -290,6 +293,9 @@ namespace qase {
 
 		const char* project = std::getenv((prefix + "PROJECT").c_str());
 		if (project) cfg.project = project;
+
+		const char* complete = std::getenv((prefix + "RUN_COMPLETE").c_str());
+		if (complete) cfg.run_complete = std::string(complete) == "true";
 
 		return cfg;
 	}

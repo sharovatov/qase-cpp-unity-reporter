@@ -27,7 +27,7 @@ namespace qase {
 		std::string connection_format = "json";
 		bool enterprise = false;
 
-		int run_id;
+		int run_id = 0;
 
 		std::string run_title;
 		QaseConfig() {
