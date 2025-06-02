@@ -71,10 +71,13 @@ namespace qase {
 	// qase_start_run should call Qase API and return new test run
 	uint64_t QaseApi::qase_start_run(HttpClient& http, const QaseConfig& cfg) {
 		const std::string url = qase_api_base(cfg) + "run/" + cfg.project;
-		const std::string payload = R"({ "title": "Unity Test Run", "include_all_cases": true })";
+		nlohmann::json payload;
+		payload["title"] = cfg.run_title.empty() ? "Unity Test Run" : cfg.run_title;
+		payload["include_all_cases"] = true;
+
 		const auto headers = make_headers(cfg.token);
 
-		std::string response = http.post(url, payload, headers);
+		std::string response = http.post(url, payload.dump(), headers);
 		auto json = nlohmann::json::parse(response);
 
 		check_qase_api_error(json);
