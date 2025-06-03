@@ -1,32 +1,20 @@
+## Qase Unity C++ Reporter
+
+This lightweight reporter collects Unity test results in any C++ environment (even on embedded platforms like ESP32) and sends them to Qase TestOps via its API.
+
+It supports:
+- Collecting test results during execution
+- Submitting results to an existing or new test run
+- Marking test runs as complete (optional)
+- Per-test metadata (case ID, title override, custom fields)
+
 ## Reporter lifecycle
 
-1. Start the run to create a test run in Qase: call `POST /run/{projectCode}` with a run title, environment, etc. Qase will returns a `run_id` which is needed for the next step.
-2. Run the tests locally in C++
-3. Record test results
-4. Serialise results into JSON in the format Qase expects
-5. Submit all results using `POST /result/{projectCode}/{runId}/bulk`
-6. Complete the run by calling `PATCH /run/{projectCode}/{runId}/complete`
-
-## Minimal payload structure
-
-```
-{
-  "results": [
-    {
-      "case": {
-        "title": "MyFirstTest"
-      },
-      "status": "passed"
-    },
-    {
-      "case": {
-        "title": "MySecondTest"
-      },
-      "status": "failed"
-    }
-  ]
-}
-```
+1. Starts the test run in Qase
+2. Run the tests locally with C++ Unity
+3. For each test, record the result
+4. Submit all recorded results to Qase
+6. Complete the test run in Qase
 
 ## TODO:
 
