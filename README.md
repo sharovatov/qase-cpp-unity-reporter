@@ -37,7 +37,7 @@
 - [x] complete the run via API `PATCH /run/{projectCode}/{runId}/complete`
 - [x] Support for the file config for `QASE_API_TOKEN`, `QASE_PROJECT_CODE`
 - [x] Support specifying the run id
+- [x] support adding metadata to tests
 - [ ] Support all other features from the [config file](https://github.com/qase-tms/qase-javascript/tree/main/qase-javascript-commons#configuration)
 - [ ] Move bulk results submittion to API v2
 - [ ] Support saving to a JSON file without submitting to Qase like [here](https://github.com/qase-tms/specs/tree/master/report)
-- [ ] support adding metadata to tests
