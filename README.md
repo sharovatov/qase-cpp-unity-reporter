@@ -16,6 +16,21 @@ It supports:
 4. Submit all recorded results to Qase
 6. Complete the test run in Qase
 
+## External dependencies and STL usage
+
+1. *External: [nlohmann::json](https://github.com/nlohmann/json)*
+
+Used for serialising and deserialising JSON in qase_serialize_results, load_qase_config_from_file, qase_submit_results, etc.
+
+2. *STL*:
+    - std::string — for all the strings
+    - std::vector — for storing test results (std::vector<TestResult>)
+    - std::map<std::string, std::string> — for custom fields in QaseResultMeta
+    - std::to_string – for serialising run ID into the request URL
+    - std::runtime_error – for throwing errors on config parsing and validation
+    - std::invalid_argument – for checking result name presence
+    - std::ifstream, std::ofstream – *only on desktop* of reading/writing config files
+
 ## TODO:
 
 - [x] Support test results collection — `qase_reporter_add_result`
