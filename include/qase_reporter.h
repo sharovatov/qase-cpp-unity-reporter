@@ -108,3 +108,47 @@ struct HttpClient {
 	QaseConfig load_qase_config_from_env(const std::string& prefix);
 
 }
+
+// this macro wrapper needs to be used to run each test instead of unity's UNITY_BEGIN
+// so that the tests start from clean state
+#define QASE_UNITY_BEGIN() \
+	qase::qase_reporter_reset(); \
+	UNITY_BEGIN();
+
+// this macros will be chosen for QASE_RUN_TEST(func)
+#define QASE_RUN_TEST_SIMPLE(test_func) \
+	RUN_TEST(test_func); \
+	qase_reporter_add_result(#test_func, Unity.TestFailures == Unity.CurrentTestFailed);
+
+// this macros will be chosen for QASE_RUN_TEST(func, meta)
+#define QASE_RUN_TEST_META(test_func, meta) \
+	RUN_TEST(test_func); \
+	qase_reporter_add_result(#test_func, Unity.TestFailures == Unity.CurrentTestFailed, meta);
+
+#define GET_QASE_RUN_TEST_MACRO(_1, _2, NAME, ...) NAME
+#define QASE_RUN_TEST(...) \
+    GET_QASE_RUN_TEST_MACRO(__VA_ARGS__, QASE_RUN_TEST_META, QASE_RUN_TEST_SIMPLE)(__VA_ARGS__)
+
+// this macro wrapper needs to be used after all the tests completion instead of unity's UNITY_END
+// so that collected test results are sent to Qase API
+#define QASE_UNITY_END(http_client, cfg) \
+	UNITY_END(); \
+	qase_reporter_finish(http_client, cfg);
+
+/*
+ *  usage examples:
+ *
+ *  // normal test, basic unity replacement
+ *  QASE_RUN_TEST(test_wifi_connects_successfully);
+ *
+ *
+ *
+ *  // test run with additional meta parameters
+ *	QaseResultMeta meta = {
+ *		.case_id = 42,
+ *		.title = "WiFi connects",
+ *		.fields = { {"severity", "critical"} }
+ *	};
+ *	QASE_RUN_TEST(test_wifi_connects_successfully, meta);
+ *
+ * */
