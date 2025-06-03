@@ -47,6 +47,7 @@ int main()
 	RUN_TEST(test_start_run_sets_description_if_present);
 	RUN_TEST(test_load_qase_config_parses_run_complete);
 	RUN_TEST(test_orchestrator_skips_complete_run_if_config_false);
+	RUN_TEST(test_qase_reporter_add_result_accepts_meta);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 

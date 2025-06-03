@@ -82,4 +82,23 @@ void test_results_are_serialized_to_json()
 	assert(json.find("\"status\":\"failed\"") != std::string::npos);
 }
 
+void test_qase_reporter_add_result_accepts_meta() {
+	qase_reporter_reset();
 
+	QaseResultMeta meta;
+	meta.case_id = 123;
+	meta.title = "Test title with metadata";
+	meta.fields["priority"] = "high";
+	meta.fields["layer"] = "unit";
+
+	qase_reporter_add_result("test_with_meta", true, meta);
+
+	const auto& results = qase_reporter_get_results();
+	assert(results.size() == 1);
+	assert(results[0].name == "test_with_meta");
+	assert(results[0].passed == true);
+	assert(results[0].meta.case_id == 123);
+	assert(results[0].meta.title == "Test title with metadata");
+	assert(results[0].meta.fields.at("priority") == "high");
+	assert(results[0].meta.fields.at("layer") == "unit");
+}
