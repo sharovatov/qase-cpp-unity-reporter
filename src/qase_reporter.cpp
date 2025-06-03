@@ -26,10 +26,15 @@ namespace qase {
 	}
 
 	void qase_reporter_add_result(const std::string& name, bool passed) {
+		QaseResultMeta meta;
+		qase_reporter_add_result(name, passed, meta);
+	}
+
+	void qase_reporter_add_result(const std::string& name, bool passed, const QaseResultMeta& meta) {
 		if (name.empty()) {
 			throw std::invalid_argument("Test name must not be empty");
 		}
-		collected.push_back(TestResult{name, passed});
+		collected.push_back(TestResult{name, passed, meta});
 	}
 
 	const std::vector<TestResult>& qase_reporter_get_results() {

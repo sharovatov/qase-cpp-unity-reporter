@@ -2,12 +2,20 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 namespace qase {
+
+	struct QaseResultMeta {
+		int case_id = 0;
+		std::string title;
+		std::map<std::string, std::string> fields;
+	};
 
 	struct TestResult {
 		std::string name;
 		bool passed;
+		QaseResultMeta meta;
 	};
 
 	struct QaseConfig {
@@ -63,6 +71,7 @@ struct HttpClient {
 	};
 
 	void qase_reporter_add_result(const std::string& name, bool passed);
+	void qase_reporter_add_result(const std::string& name, bool passed, const QaseResultMeta& meta);
 	const std::vector<TestResult>& qase_reporter_get_results();
 
 	void qase_reporter_reset();
