@@ -70,31 +70,39 @@ void test_results_are_serialized_to_json()
 {
 	std::vector<TestResult> results;
 
-	// basic test run result
+	// 1. basic result without metadata
 	results.push_back({ "MyFirstTest", true });
 
-	// result of the test run with metadata
+	// 2. result with metadata
 	QaseResultMeta meta;
 	meta.case_id = 123;
-	meta.title = "Test with Metadata";
+	meta.title = "Replaced Test Name";
 	meta.fields["priority"] = "high";
-	meta.fields["layer"] = "unit";
 
 	results.push_back({ "SecondTest", false, meta });
 
-	std::string json = qase_serialize_results(results);
+	// serialize
+	std::string json_str = qase_serialize_results(results);
 
-	// common fields
-	assert(json.find("\"title\":\"MyFirstTest\"") != std::string::npos);
-	assert(json.find("\"status\":\"passed\"") != std::string::npos);
-	assert(json.find("\"title\":\"SecondTest\"") != std::string::npos);
-	assert(json.find("\"status\":\"failed\"") != std::string::npos);
+	auto parsed = nlohmann::json::parse(json_str);
 
-	// metadata fields
-	assert(json.find("\"case_id\":123") != std::string::npos);
-	assert(json.find("\"title\":\"Test with Metadata\"") != std::string::npos);
-	assert(json.find("\"priority\":\"high\"") != std::string::npos);
-	assert(json.find("\"layer\":\"unit\"") != std::string::npos);
+	assert(parsed.contains("results"));
+	assert(parsed["results"].is_array());
+	assert(parsed["results"].size() == 2);
+
+	// check first run result
+	auto r1 = parsed["results"][0];
+	assert(r1["status"] == "passed");
+	assert(r1["case"]["title"] == "MyFirstTest");
+	assert(!r1["case"].contains("case_id"));
+	assert(!r1["case"].contains("priority"));
+
+	// check second run result
+	auto r2 = parsed["results"][1];
+	assert(r2["status"] == "failed");
+	assert(r2["case"]["title"] == "Replaced Test Name");
+	assert(r2["case"]["case_id"] == 123);
+	assert(r2["case"]["priority"] == "high");
 }
 
 void test_qase_reporter_add_result_accepts_meta() {

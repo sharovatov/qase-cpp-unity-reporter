@@ -51,7 +51,26 @@ namespace qase {
 
 		for (const auto& result : collected) {
 			json entry;
-			entry["case"] = { {"title", result.name} };
+			json case_json;
+
+			// use title from meta if provided, else - result.name
+			if (!result.meta.title.empty()) {
+				case_json["title"] = result.meta.title;
+			} else {
+				case_json["title"] = result.name;
+			}
+
+			// add case_id if set
+			if (result.meta.case_id > 0) {
+				case_json["case_id"] = result.meta.case_id;
+			}
+
+			// add custom fields if present
+			for (const auto& kv : result.meta.fields) {
+				case_json[kv.first] = kv.second;
+			}
+
+			entry["case"] = case_json;
 			entry["status"] = result.passed ? "passed" : "failed";
 
 			root["results"].push_back(entry);
