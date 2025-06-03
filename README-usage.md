@@ -44,13 +44,13 @@ QASE_RUN_TEST(your_test2);
 QASE_UNITY_END(http, cfg);
 ```
 
+Note that if you want to submit additional parameters to tests, you can do it like so:
 
-
-  // test run with additional meta parameters
-	QaseResultMeta meta = {
-		.case_id = 42,
-		.title = "WiFi connects",
-		.fields = { {"severity", "critical"} }
-	};
-	QASE_RUN_TEST(test_wifi_connects_successfully, meta);
- 
+```
+QaseResultMeta meta = {
+	.case_id = 42,
+	.title = "WiFi connects",
+	.fields = { {"severity", "critical"} }
+};
+QASE_RUN_TEST(test_wifi_connects_successfully, meta);
+```
