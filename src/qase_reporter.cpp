@@ -4,6 +4,8 @@
 // fstream is used only in config file reader
 // and config file reader is not supported on ESP32
 #include <fstream>
+#include <iostream>
+#include <filesystem>
 #endif
 
 using json = nlohmann::json;
@@ -172,7 +174,14 @@ namespace qase {
 		// early return for "report" mode
 		if (cfg.mode == "report") {
 #ifndef ESP_PLATFORM
-			// TODO: write payload to file 
+			std::cout << "[DEBUG] Current working dir: " << std::filesystem::current_path() << std::endl;
+			std::cout << "[DEBUG] Will try to write to: " << cfg.report_connection_path << std::endl;
+			std::ofstream out(cfg.report_connection_path);
+			if (!out) {
+				throw std::runtime_error("Failed to open file for writing report payload");
+			}
+			out << payload;
+			out.close();
 			return;
 #else
 			// on ESP mode=report will simply result in no-op
