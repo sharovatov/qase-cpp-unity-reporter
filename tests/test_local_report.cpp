@@ -7,10 +7,12 @@ void test_report_mode_skips_api_calls() {
 
 	QaseConfig cfg = make_test_config();
 	cfg.mode = "report";
+	cfg.report_connection_path = "/tmp/test_report_output.json";
 
 	qase_submit_report(api, http, cfg);
 
 	assert(api.calls.empty() && "In report mode, no API calls should be made");
+	std::remove(cfg.report_connection_path.c_str());
 }
 
 void test_report_mode_requires_connection_path() {
@@ -47,7 +49,7 @@ void test_report_mode_writes_payload_to_file() {
 	qase_submit_report(api, http, cfg);
 
 	// check the file is written
-	std::ifstream in("test_report_output.json");
+	std::ifstream in(cfg.report_connection_path);
 	assert(in.good() && "Expected output file to be created in report mode");
 
 	nlohmann::json json_payload;
@@ -60,5 +62,5 @@ void test_report_mode_writes_payload_to_file() {
 	assert(json_payload["results"][0]["status"] == "passed");
 
 	in.close();
-	std::remove("test_report_output.json");
+	std::remove(cfg.report_connection_path.c_str());
 }

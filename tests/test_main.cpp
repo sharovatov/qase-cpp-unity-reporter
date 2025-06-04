@@ -51,9 +51,9 @@ int main()
 	RUN_TEST(test_qase_reporter_add_result_accepts_meta);
 
 	// local reports tests
+	RUN_TEST(test_report_mode_requires_connection_path);
 	RUN_TEST(test_report_mode_skips_api_calls);
 	RUN_TEST(test_report_mode_writes_payload_to_file);
-	RUN_TEST(test_report_mode_requires_connection_path);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 

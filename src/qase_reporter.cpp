@@ -174,8 +174,9 @@ namespace qase {
 		// early return for "report" mode
 		if (cfg.mode == "report") {
 #ifndef ESP_PLATFORM
-			std::cout << "[DEBUG] Current working dir: " << std::filesystem::current_path() << std::endl;
-			std::cout << "[DEBUG] Will try to write to: " << cfg.report_connection_path << std::endl;
+			if (cfg.report_connection_path.empty()) {
+				throw std::invalid_argument("report_connection_path must be set when mode is 'report'");
+			}
 			std::ofstream out(cfg.report_connection_path);
 			if (!out) {
 				throw std::runtime_error("Failed to open file for writing report payload");
