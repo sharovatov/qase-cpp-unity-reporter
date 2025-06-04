@@ -66,3 +66,7 @@ target_link_libraries(qase_reporter_tests
     qase_reporter
     nlohmann_json::nlohmann_json
 )
+
+if(QASE_SCHEMA_VALIDATION)
+    target_compile_definitions(qase_reporter_tests PRIVATE QASE_SCHEMA_VALIDATION_ENABLED)
+endif()

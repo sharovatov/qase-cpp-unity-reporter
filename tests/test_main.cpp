@@ -6,6 +6,11 @@
 #include "test_config.cpp"
 #include "test_local_report.cpp"
 
+// schema validation logics is only present when QASE_SCHEMA_VALIDATION=ON during build time
+#ifdef QASE_SCHEMA_VALIDATION_ENABLED
+#include "test_json_schema_validator.cpp"
+#endif
+
 #define RUN_TEST(test_func) \
     std::cout << "Running " #test_func "... "; \
     test_func(); \
@@ -54,6 +59,12 @@ int main()
 	RUN_TEST(test_report_mode_requires_connection_path);
 	RUN_TEST(test_report_mode_skips_api_calls);
 	RUN_TEST(test_report_mode_writes_payload_to_file);
+
+	// schema validation logics is only present when QASE_SCHEMA_VALIDATION_ENABLED=ON during build time
+#ifdef QASE_SCHEMA_VALIDATION_ENABLED
+	RUN_TEST(test_valid_json_passes_schema);
+	RUN_TEST(test_invalid_json_fails_schema);
+#endif
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
