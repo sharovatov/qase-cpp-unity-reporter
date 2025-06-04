@@ -4,6 +4,7 @@
 #include "test_recorder.cpp"
 #include "test_submitter.cpp"
 #include "test_config.cpp"
+#include "test_local_report.cpp"
 
 #define RUN_TEST(test_func) \
     std::cout << "Running " #test_func "... "; \
@@ -48,6 +49,9 @@ int main()
 	RUN_TEST(test_load_qase_config_parses_run_complete);
 	RUN_TEST(test_orchestrator_skips_complete_run_if_config_false);
 	RUN_TEST(test_qase_reporter_add_result_accepts_meta);
+
+	// local reports tests
+	RUN_TEST(test_report_mode_skips_api_calls);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
