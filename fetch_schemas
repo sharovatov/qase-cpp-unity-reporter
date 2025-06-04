@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -e
+
+# resolve actual path of this script, even if symlinked
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+
+# target dir is inside the current project, e.g. ./external/qase-specs
+TARGET_DIR="${SCRIPT_DIR}/external/qase-specs"
+
+if [ -d "$TARGET_DIR" ]; then
+  echo "✅ Schemas already fetched at $TARGET_DIR"
+else
+  echo "📥 Cloning Qase schema repo..."
+  git clone --depth 1 https://github.com/qase-tms/specs.git "$TARGET_DIR"
+  echo "✅ Qase schemas are now available under $TARGET_DIR/report/schemas/"
+fi
+
+mkdir -p "${SCRIPT_DIR}/schemas"
+mkdir -p "${SCRIPT_DIR}/schemas/models"
+yq -o=json external/qase-specs/report/schemas/root.yaml > schemas/root.json
+yq -o=json external/qase-specs/report/schemas/result.yaml > schemas/result.json
+yq -o=json external/qase-specs/report/schemas/models/attachment.yaml > schemas/models/attachment.json
+yq -o=json external/qase-specs/report/schemas/models/step.yaml > schemas/models/step.json
