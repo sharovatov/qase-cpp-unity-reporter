@@ -169,6 +169,17 @@ namespace qase {
 		// step 1: take all serialised results accumulated from qase_reporter_add_result calls
 		const std::string payload = qase_serialize_results(results);
 
+		// early return for "report" mode
+		if (cfg.mode == "report") {
+#ifndef ESP_PLATFORM
+			// TODO: write payload to file 
+			return;
+#else
+			// on ESP mode=report will simply result in no-op
+			return;
+#endif
+		}
+
 		// step 2: if run_id is sent from the config, use it
 		// if no run_id is sent, start new test run in Qase API with qase_start_run 
 		// and get the run_id of this new run
