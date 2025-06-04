@@ -1,2 +1,12 @@
 #!/usr/bin/env bash
-cmake -S . -B build && cmake --build build&& ./build/qase_reporter_tests
+
+# for desktop, json schema is parsed
+# and yq is required to convert from yaml to json
+if ! command -v yq &> /dev/null; then
+  echo "yq is required to convert schema.yaml to schema.json"
+  exit 1
+fi
+rm -rf build/
+cmake -S . -B build -DQASE_SCHEMA_VALIDATION=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+cmake --build build
+./build/qase_reporter_tests

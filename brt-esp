@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# for ESP, there's no schema parsing support
+rm -rf build/
+cmake -S . -B build -DQASE_SCHEMA_VALIDATION=OFF
+cmake --build build
+./build/qase_reporter_tests
+

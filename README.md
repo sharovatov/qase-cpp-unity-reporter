@@ -18,18 +18,25 @@ It supports:
 
 ## External dependencies and STL usage
 
-1. **External: [nlohmann::json](https://github.com/nlohmann/json)**
+### External
+
+1. **[nlohmann::json](https://github.com/nlohmann/json)**
 
 Used for serialising and deserialising JSON in qase_serialize_results, load_qase_config_from_file, qase_submit_results, etc.
 
-2. **STL**:
-    - std::string — for all the strings
-    - std::vector — for storing test results (std::vector<TestResult>)
-    - std::map<std::string, std::string> — for custom fields in QaseResultMeta
-    - std::to_string – for serialising run ID into the request URL
-    - std::runtime_error – for throwing errors on config parsing and validation
-    - std::invalid_argument – for checking result name presence
-    - std::ifstream, std::ofstream – **only on desktop** of reading/writing config files
+2. **[yq](https://github.com/mikefarah/yq)**
+
+Used to transform [Qase report yaml schemas](https://github.com/qase-tms/specs/tree/master/report) from YAML to JSON. This is needed to validate the report schemas.
+
+### STL
+
+- std::string — for all the strings
+- std::vector — for storing test results (std::vector<TestResult>)
+- std::map<std::string, std::string> — for custom fields in QaseResultMeta
+- std::to_string – for serialising run ID into the request URL
+- std::runtime_error – for throwing errors on config parsing and validation
+- std::invalid_argument – for checking result name presence
+- std::ifstream, std::ofstream – **only on desktop** of reading/writing config files
 
 ## TODO:
 
