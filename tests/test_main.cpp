@@ -52,6 +52,7 @@ int main()
 
 	// local reports tests
 	RUN_TEST(test_report_mode_skips_api_calls);
+	RUN_TEST(test_report_mode_writes_payload_to_file);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
