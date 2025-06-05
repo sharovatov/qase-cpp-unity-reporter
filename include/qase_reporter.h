@@ -107,6 +107,8 @@ struct HttpClient {
 
 	QaseConfig load_qase_config_from_env(const std::string& prefix);
 
+	void qase_save_report(const std::vector<TestResult>& results, const std::string& path);
+
 }
 
 // this macro wrapper needs to be used to run each test instead of unity's UNITY_BEGIN

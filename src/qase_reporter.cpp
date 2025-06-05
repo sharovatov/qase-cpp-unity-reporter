@@ -388,5 +388,39 @@ namespace qase {
 		return result;
 	}
 
+#ifdef QASE_SCHEMA_VALIDATION_ENABLED
+	void qase_save_report(const std::vector<TestResult>& results, const std::string& path) {
+		// prepare flat JSON for schema
+		nlohmann::json report;
+		report["results"] = nlohmann::json::array();
+
+		for (const auto& r : results) {
+			nlohmann::json entry;
+			entry["title"] = !r.meta.title.empty() ? r.meta.title : r.name;
+			entry["status"] = r.passed ? "passed" : "failed";
+
+			if (r.meta.case_id > 0) {
+				entry["id"] = "TC-" + std::to_string(r.meta.case_id);
+			}
+
+			for (const auto& [key, val] : r.meta.fields) {
+				try {
+					entry[key] = std::stod(val);
+				} catch (...) {
+					entry[key] = val;
+				}
+			}
+
+			report["results"].push_back(entry);
+		}
+
+		std::ofstream out(path);
+		if (!out) {
+			throw std::runtime_error("Failed to open file for writing report");
+		}
+		out << report.dump(2);
+		out.close();
+	}
+#endif
 
 }
