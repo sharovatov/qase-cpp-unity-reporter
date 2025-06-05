@@ -45,9 +45,9 @@ void test_valid_json_passes_schema() {
 }
 
 void test_invalid_json_fails_schema() {
+
 	json invalid = {
-		// missing required fields like "results", "stats", etc.
-		{"title", "Incomplete Report"}
+		{"results", "this should be an array"}
 	};
 
 	bool threw = false;
