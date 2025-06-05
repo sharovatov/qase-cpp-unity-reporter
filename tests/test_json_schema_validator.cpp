@@ -45,5 +45,18 @@ void test_valid_json_passes_schema() {
 }
 
 void test_invalid_json_fails_schema() {
+	json invalid = {
+		// missing required fields like "results", "stats", etc.
+		{"title", "Incomplete Report"}
+	};
+
+	bool threw = false;
+	try {
+		validate_json_payload(invalid);
+	} catch (const std::exception& e) {
+		threw = true;
+	}
+
+	assert(threw && "Expected invalid JSON to fail schema validation");
 }
 
