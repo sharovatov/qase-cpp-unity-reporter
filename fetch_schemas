@@ -22,9 +22,21 @@ else
   echo "✅ Qase schemas are now available under $TARGET_DIR/report/schemas/"
 fi
 
-mkdir -p "${SCRIPT_DIR}/schemas"
-mkdir -p "${SCRIPT_DIR}/schemas/models"
-yq -o=json external/qase-specs/report/schemas/root.yaml > schemas/root.json
-yq -o=json external/qase-specs/report/schemas/result.yaml > schemas/result.json
-yq -o=json external/qase-specs/report/schemas/models/attachment.yaml > schemas/models/attachment.json
-yq -o=json external/qase-specs/report/schemas/models/step.yaml > schemas/models/step.json
+SCHEMA_DIR="${SCRIPT_DIR}/schemas"
+MODEL_DIR="${SCHEMA_DIR}/models"
+
+mkdir -p "$MODEL_DIR"
+
+convert_and_fix() {
+  local source_yaml="$1"
+  local target_json="$2"
+
+  yq -o=json "$source_yaml" > "$target_json.tmp"
+  node "${SCRIPT_DIR}/fix-schema.js" "$target_json.tmp" "$target_json"
+  rm "$target_json.tmp"
+}
+
+convert_and_fix external/qase-specs/report/schemas/root.yaml "$SCHEMA_DIR/root.json"
+convert_and_fix external/qase-specs/report/schemas/result.yaml "$SCHEMA_DIR/result.json"
+convert_and_fix external/qase-specs/report/schemas/models/attachment.yaml "$MODEL_DIR/attachment.json"
+convert_and_fix external/qase-specs/report/schemas/models/step.yaml "$MODEL_DIR/step.json"
