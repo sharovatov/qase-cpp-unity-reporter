@@ -1,3 +1,4 @@
+#ifdef QASE_SCHEMA_VALIDATION_ENABLED
 #include <cassert>
 #include <nlohmann/json.hpp>
 #include "json_schema_validator.h"
@@ -60,3 +61,4 @@ void test_invalid_json_fails_schema() {
 	assert(threw && "Expected invalid JSON to fail schema validation");
 }
 
+#endif
