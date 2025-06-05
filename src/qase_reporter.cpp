@@ -171,25 +171,6 @@ namespace qase {
 		// step 1: take all serialised results accumulated from qase_reporter_add_result calls
 		const std::string payload = qase_serialize_results(results);
 
-		// early return for "report" mode
-		if (cfg.mode == "report") {
-#ifndef ESP_PLATFORM
-			if (cfg.report_connection_path.empty()) {
-				throw std::invalid_argument("report_connection_path must be set when mode is 'report'");
-			}
-			std::ofstream out(cfg.report_connection_path);
-			if (!out) {
-				throw std::runtime_error("Failed to open file for writing report payload");
-			}
-			out << payload;
-			out.close();
-			return;
-#else
-			// on ESP mode=report will simply result in no-op
-			return;
-#endif
-		}
-
 		// step 2: if run_id is sent from the config, use it
 		// if no run_id is sent, start new test run in Qase API with qase_start_run 
 		// and get the run_id of this new run

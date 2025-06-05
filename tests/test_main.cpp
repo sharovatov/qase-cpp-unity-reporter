@@ -56,9 +56,6 @@ int main()
 	RUN_TEST(test_qase_reporter_add_result_accepts_meta);
 
 	// local reports tests
-	RUN_TEST(test_report_mode_requires_connection_path);
-	RUN_TEST(test_report_mode_skips_api_calls);
-	RUN_TEST(test_report_mode_writes_payload_to_file);
 
 	// schema validation logics is only present when QASE_SCHEMA_VALIDATION_ENABLED=ON during build time
 #ifdef QASE_SCHEMA_VALIDATION_ENABLED
