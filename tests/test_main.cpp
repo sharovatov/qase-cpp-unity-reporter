@@ -55,12 +55,11 @@ int main()
 	RUN_TEST(test_orchestrator_skips_complete_run_if_config_false);
 	RUN_TEST(test_qase_reporter_add_result_accepts_meta);
 
-	// local reports tests
-
 	// schema validation logics is only present when QASE_SCHEMA_VALIDATION_ENABLED=ON during build time
 #ifdef QASE_SCHEMA_VALIDATION_ENABLED
 	RUN_TEST(test_valid_json_passes_schema);
 	RUN_TEST(test_invalid_json_fails_schema);
+	RUN_TEST(test_qase_save_report_writes_valid_schema_json);
 #endif
 
 	std::cout << "All TDD checks passed!" << std::endl;
