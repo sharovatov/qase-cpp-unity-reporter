@@ -24,9 +24,17 @@ It supports:
 
 Used for serialising and deserialising JSON in qase_serialize_results, load_qase_config_from_file, qase_submit_results, etc.
 
-2. **[yq](https://github.com/mikefarah/yq)**
+2. **[json-schema-validator](https://github.com/pboettch/json-schema-validator)**
+
+Used to validate report json payload against json schema draft 4
+
+3. **[yq](https://github.com/mikefarah/yq)**
 
 Used to transform [Qase report yaml schemas](https://github.com/qase-tms/specs/tree/master/report) from YAML to JSON. This is needed to validate the report schemas.
+
+4. **[openapi-schema-to-json-schema](https://github.com/openapi-contrib/openapi-schema-to-json-schema)**
+
+Used to convert json from openapi schema to json schema draft 4 so that json-schema-validator can work.
 
 ### STL
 
@@ -42,4 +50,4 @@ Used to transform [Qase report yaml schemas](https://github.com/qase-tms/specs/t
 
 - [ ] Move bulk results submittion to API v2
 - [ ] Support all the features from the [config file](https://github.com/qase-tms/qase-javascript/tree/main/qase-javascript-commons#configuration)
-- [ ] Support saving to a JSON file without submitting to Qase like [here](https://github.com/qase-tms/specs/tree/master/report) — **should only be done for desktop**
+- [x] Support saving to a JSON file without submitting to Qase like [here](https://github.com/qase-tms/specs/tree/master/report)
