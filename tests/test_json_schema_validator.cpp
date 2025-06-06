@@ -1,4 +1,4 @@
-#ifdef QASE_SCHEMA_VALIDATION_ENABLED
+#ifdef QASE_REPORTER_FULL_MODE_ENABLED
 #include <cassert>
 #include <nlohmann/json.hpp>
 #include "json_schema_validator.h"

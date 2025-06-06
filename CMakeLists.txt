@@ -4,7 +4,7 @@ project(qase_cpp_reporter)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-option(QASE_SCHEMA_VALIDATION "Enable JSON Schema validation support" OFF)
+option(QASE_REPORTER_FULL_MODE "Enable JSON Schema validation and OpenAPI Client" OFF)
 
 include_directories(include)
 cmake_policy(SET CMP0135 NEW)
@@ -21,7 +21,7 @@ set(JSON_Install ON CACHE INTERNAL "")  # KEY: allow downstream export
 FetchContent_MakeAvailable(json)
 
 # --- Conditionally fetch and configure json-schema-validator ---
-if(QASE_SCHEMA_VALIDATION)
+if(QASE_REPORTER_FULL_MODE)
     message(STATUS "Schema validation is enabled")
 
     set(JSON_SCHEMA_VALIDATOR_BUILD_TESTS OFF CACHE INTERNAL "")
@@ -44,7 +44,7 @@ target_link_libraries(qase_reporter
     nlohmann_json::nlohmann_json
 )
 
-if(QASE_SCHEMA_VALIDATION)
+if(QASE_REPORTER_FULL_MODE)
     target_sources(qase_reporter
         PRIVATE
         src/json_schema_validator.cpp
@@ -53,7 +53,7 @@ if(QASE_SCHEMA_VALIDATION)
         PRIVATE
         nlohmann_json_schema_validator
     )
-    target_compile_definitions(qase_reporter PRIVATE QASE_SCHEMA_VALIDATION_ENABLED)
+    target_compile_definitions(qase_reporter PRIVATE QASE_REPORTER_FULL_MODE_ENABLED)
 endif()
 
 # --- Tests ---
@@ -67,6 +67,6 @@ target_link_libraries(qase_reporter_tests
     nlohmann_json::nlohmann_json
 )
 
-if(QASE_SCHEMA_VALIDATION)
-    target_compile_definitions(qase_reporter_tests PRIVATE QASE_SCHEMA_VALIDATION_ENABLED)
+if(QASE_REPORTER_FULL_MODE)
+    target_compile_definitions(qase_reporter_tests PRIVATE QASE_REPORTER_FULL_MODE_ENABLED)
 endif()

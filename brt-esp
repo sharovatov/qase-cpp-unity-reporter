@@ -2,7 +2,7 @@
 
 # for ESP, there's no schema parsing support
 rm -rf build/
-cmake -S . -B build -DQASE_SCHEMA_VALIDATION=OFF
+cmake -S . -B build -DQASE_REPORTER_FULL_MODE=OFF
 cmake --build build
 ./build/qase_reporter_tests
 

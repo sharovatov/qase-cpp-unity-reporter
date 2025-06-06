@@ -388,7 +388,7 @@ namespace qase {
 		return result;
 	}
 
-#ifdef QASE_SCHEMA_VALIDATION_ENABLED
+#ifdef QASE_REPORTER_FULL_MODE_ENABLED
 	void qase_save_report(const std::vector<TestResult>& results, const std::string& path) {
 		// prepare flat JSON for schema
 		nlohmann::json report;

@@ -7,6 +7,6 @@ if ! command -v yq &> /dev/null; then
   exit 1
 fi
 rm -rf build/
-cmake -S . -B build -DQASE_SCHEMA_VALIDATION=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+cmake -S . -B build -DQASE_REPORTER_FULL_MODE=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 cmake --build build
 ./build/qase_reporter_tests

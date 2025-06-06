@@ -4,10 +4,10 @@
 #include "test_recorder.cpp"
 #include "test_submitter.cpp"
 #include "test_config.cpp"
-#include "test_local_report.cpp"
 
-// schema validation logics is only present when QASE_SCHEMA_VALIDATION=ON during build time
-#ifdef QASE_SCHEMA_VALIDATION_ENABLED
+// schema validation logics and local reporting tests are only present when QASE_REPORTER_FULL_MODE_ENABLED=ON during build time
+#ifdef QASE_REPORTER_FULL_MODE_ENABLED
+#include "test_local_report.cpp"
 #include "test_json_schema_validator.cpp"
 #endif
 
@@ -55,8 +55,8 @@ int main()
 	RUN_TEST(test_orchestrator_skips_complete_run_if_config_false);
 	RUN_TEST(test_qase_reporter_add_result_accepts_meta);
 
-	// schema validation logics is only present when QASE_SCHEMA_VALIDATION_ENABLED=ON during build time
-#ifdef QASE_SCHEMA_VALIDATION_ENABLED
+	// schema validation logics is only present when QASE_REPORTER_FULL_MODE_ENABLED=ON during build time
+#ifdef QASE_REPORTER_FULL_MODE_ENABLED
 	RUN_TEST(test_valid_json_passes_schema);
 	RUN_TEST(test_invalid_json_fails_schema);
 	RUN_TEST(test_qase_save_report_writes_valid_schema_json);
