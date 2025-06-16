@@ -15,7 +15,7 @@ When `QASE_REPORTER_FULL_MODE=ON` (see [brt](https://github.com/sharovatov/qase-
 - schema validation
 - local report saving
 
-When `QASE_REPORTER_FULL_MODE=OFF` (see [brt](https://github.com/sharovatov/qase-cpp-unity-reporter/blob/main/brt-esp)), the reporter only supports collecting and sending test run data to Qase TestOps API.
+When `QASE_REPORTER_FULL_MODE=OFF` (see [brt-esp](https://github.com/sharovatov/qase-cpp-unity-reporter/blob/main/brt-esp)), the reporter only supports collecting and sending test run data to Qase TestOps API.
 
 ## Basic reporter lifecycle
 
