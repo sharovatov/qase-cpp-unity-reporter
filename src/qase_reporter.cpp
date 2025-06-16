@@ -423,4 +423,13 @@ namespace qase {
 	}
 #endif
 
+
+#ifdef QASE_REPORTER_FULL_MODE_ENABLED
+	// FullQaseApiAdapter will go here
+#else
+	void MinimalQaseApiAdapter::submit_report(IQaseApi& api, HttpClient& http, const QaseConfig& cfg) {
+		qase_submit_report(api, http, cfg);
+	}
+#endif
+
 }

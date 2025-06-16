@@ -99,6 +99,20 @@ struct HttpClient {
 
 	QaseConfig resolve_config(const ConfigResolutionInput& input);
 
+	struct IQaseApiAdapter {
+		virtual void submit_report(IQaseApi& api, HttpClient& http, const QaseConfig& cfg) = 0;
+		virtual ~IQaseApiAdapter() = default;
+	};
+
+	#ifdef QASE_REPORTER_FULL_MODE_ENABLED
+	// full QaseApiAdapter will go here
+	#else
+	struct MinimalQaseApiAdapter : public IQaseApiAdapter {
+		void submit_report(IQaseApi& api, HttpClient& http, const QaseConfig& cfg) override;
+	};
+	#endif
+
+
 #ifndef ESP_PLATFORM
 	QaseConfig load_qase_config_from_file(const std::string& path);
 #endif

@@ -61,10 +61,11 @@ int main()
 	RUN_TEST(test_valid_json_passes_schema);
 	RUN_TEST(test_invalid_json_fails_schema);
 	RUN_TEST(test_qase_save_report_writes_valid_schema_json);
+#else
+	RUN_TEST(test_adapter_submits_via_minimal_flow);
 #endif
 
 
-	RUN_TEST(test_minimal_adapter_submits_via_minimal_flow);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
