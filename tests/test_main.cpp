@@ -4,6 +4,7 @@
 #include "test_recorder.cpp"
 #include "test_submitter.cpp"
 #include "test_config.cpp"
+#include "test_wiring.cpp"
 
 // schema validation logics and local reporting tests are only present when QASE_REPORTER_FULL_MODE_ENABLED=ON during build time
 #ifdef QASE_REPORTER_FULL_MODE_ENABLED
@@ -61,6 +62,9 @@ int main()
 	RUN_TEST(test_invalid_json_fails_schema);
 	RUN_TEST(test_qase_save_report_writes_valid_schema_json);
 #endif
+
+
+	RUN_TEST(test_minimal_adapter_submits_via_minimal_flow);
 
 	std::cout << "All TDD checks passed!" << std::endl;
 
