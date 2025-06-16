@@ -2,13 +2,22 @@
 
 This lightweight reporter collects Unity test results in any C++ environment (even on embedded platforms like ESP32) and sends them to Qase TestOps via its API.
 
-It supports:
+The reporter supports:
+- Simple drop-in replacement for Unity macros
 - Collecting test results during execution
 - Submitting results to an existing or new test run
 - Marking test runs as complete (optional)
-- Per-test metadata (case ID, title override, custom fields)
+- Passing per-test metadata (case ID, title override, custom fields)
 
-## Reporter lifecycle
+The reporter has **two** build targets, one for compute-constrained devices like ESP-32 and other embedded; and one for "bigger" systems.
+
+When `QASE_REPORTER_FULL_MODE=ON` (see [brt](https://github.com/sharovatov/qase-cpp-unity-reporter/blob/main/brt)), the reporter is built with support for:
+- schema validation
+- local report saving
+
+When `QASE_REPORTER_FULL_MODE=OFF` (see [brt](https://github.com/sharovatov/qase-cpp-unity-reporter/blob/main/brt-esp)), the reporter only supports collecting and sending test run data to Qase TestOps API.
+
+## Basic reporter lifecycle
 
 1. Starts the test run in Qase
 2. Run the tests locally with C++ Unity
