@@ -17,6 +17,10 @@ When `QASE_REPORTER_FULL_MODE=ON` (see [brt](https://github.com/sharovatov/qase-
 
 When `QASE_REPORTER_FULL_MODE=OFF` (see [brt-esp](https://github.com/sharovatov/qase-cpp-unity-reporter/blob/main/brt-esp)), the reporter only supports collecting and sending test run data to Qase TestOps API.
 
+## Building the project
+
+Simply run `./brt` for the "full functionality" reporter or `./brt-esp` for the "slim" version.
+
 ## Basic reporter lifecycle
 
 1. Starts the test run in Qase
