@@ -123,7 +123,11 @@ struct HttpClient {
 
 	void qase_save_report(const std::vector<TestResult>& results, const std::string& path);
 
+	void qase_reporter_finish(HttpClient& http, const QaseConfig& cfg);
+
 }
+
+
 
 // this macro wrapper needs to be used to run each test instead of unity's UNITY_BEGIN
 // so that the tests start from clean state
@@ -134,12 +138,12 @@ struct HttpClient {
 // this macros will be chosen for QASE_RUN_TEST(func)
 #define QASE_RUN_TEST_SIMPLE(test_func) \
 	RUN_TEST(test_func); \
-	qase_reporter_add_result(#test_func, Unity.TestFailures == Unity.CurrentTestFailed);
+	qase::qase_reporter_add_result(#test_func, Unity.TestFailures == Unity.CurrentTestFailed);
 
 // this macros will be chosen for QASE_RUN_TEST(func, meta)
 #define QASE_RUN_TEST_META(test_func, meta) \
 	RUN_TEST(test_func); \
-	qase_reporter_add_result(#test_func, Unity.TestFailures == Unity.CurrentTestFailed, meta);
+	qase::qase_reporter_add_result(#test_func, Unity.TestFailures == Unity.CurrentTestFailed, meta);
 
 #define GET_QASE_RUN_TEST_MACRO(_1, _2, NAME, ...) NAME
 #define QASE_RUN_TEST(...) \
@@ -149,7 +153,7 @@ struct HttpClient {
 // so that collected test results are sent to Qase API
 #define QASE_UNITY_END(http_client, cfg) \
 	UNITY_END(); \
-	qase_reporter_finish(http_client, cfg);
+	qase::qase_reporter_finish(http_client, cfg);
 
 /*
  *  usage examples:

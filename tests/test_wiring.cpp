@@ -8,6 +8,10 @@ using namespace qase;
 // moving slowly to using the openapi client, now introducing manual adapter which
 // will wrap around qase_serialize_results and qase_submit_report
 #ifdef QASE_REPORTER_FULL_MODE_ENABLED
+void test_adapter_submits_via_full_flow()
+{
+
+}
 // tests for full QaseApiAdapter will go here
 #else
 void test_adapter_submits_via_minimal_flow()

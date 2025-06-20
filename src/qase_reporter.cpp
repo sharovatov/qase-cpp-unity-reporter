@@ -388,6 +388,12 @@ namespace qase {
 		return result;
 	}
 
+	void qase_reporter_finish(HttpClient& http, const QaseConfig& cfg) {
+		MinimalQaseApiAdapter adapter;
+		QaseApi api;
+		adapter.submit_report(api, http, cfg);
+	}
+
 #ifdef QASE_REPORTER_FULL_MODE_ENABLED
 	void qase_save_report(const std::vector<TestResult>& results, const std::string& path) {
 		// prepare flat JSON for schema
