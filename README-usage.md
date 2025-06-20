@@ -41,7 +41,12 @@ These need to be replaced with:
 QASE_UNITY_BEGIN();
 QASE_RUN_TEST(your_test1);
 QASE_RUN_TEST(your_test2);
-QASE_UNITY_END(http, cfg);
+try {
+    QASE_UNITY_END(http, cfg);
+}
+catch (const std::exception& e) {
+    //handle the exception, Qase API errors will throw
+}
 ```
 
 Note that if you want to submit additional parameters to tests, you can do it like so:

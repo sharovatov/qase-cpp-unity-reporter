@@ -151,6 +151,7 @@ namespace qase {
 
 	}
 
+	// NOTE: Can throw std::runtime_error if Qase API returns an error
 	// qase_submit_report must follow this flow:
 	// 1. take all the results accumulated from qase_reporter_add_result calls
 	// 2. start test run in Qase API with qase_start_run
